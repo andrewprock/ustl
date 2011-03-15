@@ -204,8 +204,7 @@ static tuple<4,float> operator* (const tuple<4,float>& t, const matrix<4,4,float
 #else	// If no processor extensions, just unroll the multiplication
 
 /// Specialization for 4-component vector transform, the slow part of 3D graphics.
-template <>
-static tuple<4,float> operator* (const tuple<4,float>& t, const matrix<4,4,float>& m)
+template <> inline tuple<4,float> operator* (const tuple<4,float>& t, const matrix<4,4,float>& m)
 {
     tuple<4,float> tr;
     for (uoff_t i = 0; i < 4; ++ i)
