@@ -5,7 +5,6 @@
     <title>uSTL - the small STL library</title>
     <link rel="stylesheet" type="text/css" href="style/default.css" />
     <meta http-equiv="Content-Type" content="text/xhtml+xml; charset=ISO-8859-1" />
-    <meta name="verify-v1" content="/fXe51SIkBhDzzEnY6l1J+PzhPSgYDL33GBy6ldjxYo=" />
     <meta name="Description" content="API and usage description for uSTL, a size-optimized STL implementation" />
     <meta name="Keywords" content="C++, STL, template, bloat, optimization" />
     <meta name="author" content="Mike Sharov" />
@@ -22,27 +21,26 @@
 <h2><a name="Introduction">Introduction</a></h2>
 <p>
 The C++ standard template library (STL) is a collection of common
-containers and algorithms in template form. Unfortunately, it can be
-large and bloat-filled, as its standard incarnation shipped with gcc
-demonstrates. Not only is the library itself large, with the current
-version over a megabyte in size, but with all the code you instantiate by
-using a vector for each of your containers, it is easy to become fearful
-and opt for using static arrays instead. This is especially painful to
-former DOS assembly programmers like myself, who fret endlessly when
-the size of the executable crosses the magic 64k boundary, forgetting
-that nobody cares about memory anymore.
+containers and algorithms in template form. Unfortunately its standard
+incarnation shipped with gcc is implemented without much concern for code
+size.  Not only is the library itself large, the current version being
+over a megabyte in size, but with all the code you instantiate by using a
+vector for each of your containers, it is easy to become fearful and opt
+for using static arrays instead or, worse yet, abandon C++ altogether
+for C.  This is especially painful to former DOS assembly programmers
+like myself, who fret endlessly when the size of the executable crosses
+the magic 64k boundary, forgetting that nobody cares about memory anymore.
 </p><p>
-Of course, these days everyone has gigabytes of RAM (I have 4G myself) and
-has no compunction about loading up OpenOffice, whose source tree is over
-a gigabyte in size. Why then bother with saving a kilobyte of code here
-and there? I can't really say. Maybe it's that warm fuzzy knowledge that
-you are making maximum possible use of your computer's resources. Maybe
-it's that thrill you get after expressing your program's functionality in
-the fewest possible instructions and the minimum imaginable overhead. Or
-maybe it really is of no importance and any code bloat will be easily
-overcome by faster processors in some near future. I just know what I
-like, and it's the sight of clean, concise, and fast code. Therefore
-this library.
+Of course, these days everyone has gigabytes of RAM and has no compunction
+about loading up OpenOffice, whose source tree is over a gigabyte in
+size. Why then bother with saving a kilobyte of code here and there? I
+can't really say. Maybe it's that warm fuzzy knowledge that you are making
+maximum possible use of your computer's resources. Maybe it's that thrill
+you get after expressing your program's functionality in the fewest
+possible instructions and the minimum imaginable overhead. Or maybe it
+really is of no importance and any code bloat will be easily overcome
+by faster processors in some near future. I just know what I like, and
+it's the sight of clean, concise, and fast code. Therefore this library.
 </p>
 <h2>Contents</h2>
 <ul>
@@ -80,13 +78,14 @@ happy to mention it here. After unpacking:
 ./configure
 make install
 </pre><p>
-configure is not autoconf, but rather a custom program with similar
-functionality. <kbd>./configure --help</kbd> lists available options.
+<kbd>./configure --help</kbd> lists available build options.
 You might want to specify a different installation prefix with
 <kbd>--prefix=/usr</kbd>; the default destination is /usr/local.
-Developers will want to build with <kbd>--with-debug</kbd> to get a lot
-of assert error checking, which I highly recommend. If you are the type
-to edit configuration manually, it's in Config.mk and config.h. When
+Developers will want to build with <kbd>--with-debug</kbd> to get a
+lot of assert error checking, which I highly recommend. If you have
+gcc 4.4 or later, you may want to also use <kbd>--force-inline</kbd>
+(see the bottom of this page for a fuller explanation). If you are the
+type to edit configuration manually, it's in Config.mk and config.h. When
 it's built, you can run the included tests with <kbd>make check</kbd>.
 Finally, here's a simple hello world application:
 </p><pre>
@@ -109,31 +108,15 @@ save, skip to the <a href="#Savings">Template Bloat Be Gone</a> section)
 </p>
 <h2><a name="Containers">Containers and Iterators</a></h2>
 <p>
-Are you still programming with malloc'ed arrays and iterating with
-pointers? Such pains you must be going through every time you need
-some memory. You must dread the very thought of variable-sized arrays
-and live in constant fear of memory leaks and dangling pointers. You
-wake up in cold sweat every night wondering whether you freed that
-pointer you allocated and keep wondering why in the world you're still
-using C++ instead of some comfy language with garbage collection, like
-Java or Python. In STL, you will find your salvation and rebirth! Free
-those mallocs and discover containers! STL containers are, um... well,
-they are basically, uh... malloc'ed blocks of memory. And iterators are,
-um... basically pointers into those blocks. But don't run away yet! It's
-all different, I promise. Honest!
-</p><p>
-The first rule you should learn before switching to STL is: "never use
-new".  That's right. Just forget about ever manually allocating memory
-again. The one and only exception to it is too advanced for you now;
-I'll mention it later. From now on you should be thinking in resizable
-memory blocks instead.  These blocks know how take care of themselves,
-allocating memory when it is needed and freeing it when it is now. They
-do all the hard work so you don't have to. The first one you should know
-about is the vector object. (Additional information on all the classes
-is available in the header files and in the
-<a href="html/index.html">Doxygen reference</a> available on this website
-and which could be built from source by executing <kbd>make dox</kbd> if
-you have <a href="http://www.doxygen.org/index.html">doxygen</a> installed)
+STL containers provide a generic abstraction to arrays, linked lists,
+and other methods of memory allocation. They offer the advantages
+of type-safety, the peace of mind that comes from never having to
+malloc anything again, and a standard access API called iterators. Each
+container's API is equivalent to that of a simple array, with iterators
+being the equivalent of pointers into the array. The uniform access
+API allows creation of standardized algorithms, discussed futher down,
+that work on any container. Here are some examples of using vector,
+the container representing a simple array:
 </p><pre>
 vector&lt;int&gt; v;
 v.push_back (1);
@@ -337,14 +320,15 @@ since the compiler can often see right through all this trickery and
 expand the for_each into a loop without actually creating the functor
 object. However, the compiler has a much harder time when you start
 using containers of complex objects or operating on member variables
-and member functions.  Since that is what you will most likely have
-in any real code outside the academic world, the utility of predicate
-algorithms is highly questionable.  Their readability is even more so,
+and member functions.  Since that is what you will most likely have in
+any real code outside the academic world, the utility of predicate
+algorithms is questionable.  Their readability is even more so,
 considering that the above fifteen line example can be written as a
 three line iterative foreach loop. Finally, there is the problem of
 where to put the functor. It just doesn't seem to "belong" anywhere in
-the object-oriented world. Sorry, Stepanov, I just don't see how these
-things can be anything but an ugly, bloated hindrance.
+the object-oriented world. (C++0x changes that somewhat with lambda
+functions) Sorry, Stepanov, I just don't see how these things can be
+anything but an ugly, bloated hindrance.
 </p>
 <h2><a name="Memblocks">Memblocks and Memlinks</a></h2>
 <p>
@@ -624,69 +608,77 @@ int main (void)
 }
 </pre><p>
 Feel free to compile it and see for yourself. I'm compiling on a Core
-i7 with gcc 4.4.1 and <kbd>-Os -DNDEBUG=1</kbd>. The libstdc++ version
+i7 with gcc 4.5.2 and <kbd>-Os -DNDEBUG=1</kbd>. The libstdc++ version
 is linked implicitly with it, and uSTL version is linked with gcc
 (instead of g++) and <kbd>-lustl</kbd>. Both executables are stripped.
 The libstdc++ version looks like this:
 </p><pre>
 % ls -l std/tes
-7040 tes*
+7096 tes
 % size std/tes
-text    data     bss     dec     hex filename
-3311	 632	  16    3959     f77 tes
+text	data	bss	dec	hex	filename
+3780	632	16	4428	114c	std/tes
 % size -A std/tes.o
-
 std/tes.o  :
-section                                                                                 size   addr
-.group                                                                                     8      0
-.group                                                                                     8      0
-.group                                                                                     8      0
-.group                                                                                     8      0
-.group                                                                                     8      0
-.group                                                                                     8      0
-.text                                                                                    285      0
-.data                                                                                      0      0
-.bss                                                                                       0      0
-.text._ZSt13copy_backwardIPiS0_ET0_T_S2_S1_                                               33      0
-.text._ZSt13__copy_move_aILb0EPiS0_ET1_T0_S2_S1_                                          42      0
-.text._ZNKSt6vectorIiSaIiEE12_M_check_lenEmPKc                                            82      0
-.text._ZNSt12_Vector_baseIiSaIiEE11_M_allocateEm                                          47      0
-.rodata.str1.1                                                                            45      0
-.text._ZNSt6vectorIiSaIiEE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPiS1_EEmRKi    366      0
-.text._ZNSt6vectorIiSaIiEE13_M_insert_auxEN9__gnu_cxx17__normal_iteratorIPiS1_EERKi      204      0
-.gcc_except_table                                                                         20      0
-.comment                                                                                  18      0
-.note.GNU-stack                                                                            0      0
-.eh_frame                                                                                304      0
-Total                                                                                   1494
+section                                                                                                      size
+.group                                                                                                          8
+.group                                                                                                          8
+.group                                                                                                          8
+.group                                                                                                          8
+.group                                                                                                          8
+.group                                                                                                          8
+.group                                                                                                          8
+.group                                                                                                          8
+.group                                                                                                          8
+.group                                                                                                          8
+.group                                                                                                          8
+.text                                                                                                         256
+.data                                                                                                           0
+.bss                                                                                                            0
+.text._ZNSt6vectorIiSaIiEED2Ev                                                                                  8
+.text._ZNKSt6vectorIiSaIiEE12_M_check_lenEmPKc                                                                 68
+.text._ZNSt11__copy_moveILb0ELb1ESt26random_access_iterator_tagE8__copy_mIiEEPT_PKS3_S6_S4_                    51
+.text._ZSt14__copy_move_a2ILb0EN9__gnu_cxx17__normal_iteratorIPiSt6vectorIiSaIiEEEES6_ET1_T0_S8_S7_            14
+.text._ZSt4copyIN9__gnu_cxx17__normal_iteratorIPiSt6vectorIiSaIiEEEES6_ET0_T_S8_S7_                            14
+.text._ZNSt20__copy_move_backwardILb0ELb1ESt26random_access_iterator_tagE13__copy_move_bIiEEPT_PKS3_S6_S4_     63
+.rodata.str1.1                                                                                                 45
+.text._ZNSt6vectorIiSaIiEE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPiS1_EEmRKi                         355
+.text._ZNSt6vectorIiSaIiEE6resizeEmi                                                                           64
+.text._ZNSt6vectorIiSaIiEE13_M_insert_auxEN9__gnu_cxx17__normal_iteratorIPiS1_EERKi                           195
+.text._ZNSt6vectorIiSaIiEE9push_backERKi                                                                       46
+.text._ZNSt6vectorIiSaIiEE6insertEN9__gnu_cxx17__normal_iteratorIPiS1_EERKi                                    79
+.gcc_except_table                                                                                              14
+.comment                                                                                                       40
+.note.GNU-stack                                                                                                 0
+.eh_frame                                                                                                     576
+Total                                                                                                        1976
 </pre><p>
 The uSTL version looks like this:
 </p><pre>
 % ls -l ustl/tes
-5760 tes*
+5720 tes
 % size ustl/tes
-text    data     bss     dec     hex filename
-2302     616      16    2934     b76 tes
+text	data	bss	dec	hex	filename
+2435	616	16	3067	bfb	ustl/tes
 % size -A ustl/tes.o
 ustl/tes.o  :
 section             size   addr
-.text                217      0
+.text                327      0
 .data                  0      0
 .bss                   0      0
 .gcc_except_table     19      0
-.comment              18      0
+.comment              40      0
 .note.GNU-stack        0      0
-.eh_frame             64      0
-Total                318
+.eh_frame             88      0
+Total                474
 </pre><p>
 Let's see what's going on here. The .text size in the std version is
-31% larger, indicating more inlined functionality. This version of gcc
-libstdc++ instantiates four vector functions and two copy functions,
-totalling That's 774 bytes total for just one vector type. These
-functions will become larger for containers with objects, but about
-1k in savings that you see as the difference in execuable size is a
-good measure. The uSTL version inlines everything and calls memblock
-functions instead.
+smaller, indicating less inlined functionality. This version of gcc
+libstdc++ instantiates additional eleven functions totalling 953 bytes
+just for this one vector type. These functions will become larger for
+containers with objects, but about 1k in savings that you see as the
+difference in execuable size is a good measure. The uSTL version inlines
+everything and calls memblock functions instead.
 </p><p>
 1k doesn't seem like much, but consider that you get it for <em>every
 type of container you instantiate</em>! An int vector here, a float
@@ -695,37 +687,47 @@ you are using half your executable just for container overhead.
 </p><p>
 But wait, there is more! Let's look at the total memory footprint:
 </p><pre>
-% ldd std/tes
-libstdc++.so.6 =&gt; /usr/lib/libstdc++.so.6
-libm.so.6 =&gt; /lib/libm.so.6
-libgcc_s.so.1 =&gt; /usr/lib/libgcc_s.so.1
-libc.so.6 =&gt; /lib/libc.so.6
-/lib64/ld-linux-x86-64.so.2
+% footprint std/tes
+   text	   data	    bss	    dec	    hex	filename
+   3780	    632	     16	   4428	   114c	tes
+  84445	    928	    632	  86005	  14ff5	libgcc_s.so.1
+ 527390	    720	     72	 528182	  80f36	libm.so.6
+ 962481	  34816	  84664	1081961	 108269	libstdc++.so.6
+1404487	  18024	  20032	1442543	 1602ef	libc.so.6
+2982583	  55120	 105416	3143119	 2ff5cf	(TOTALS)
 
-% ldd ustl/tes
-libustl.so.1 =&gt; /usr/local/lib/libustl.so.1
-libc.so.6 =&gt; /lib/libc.so.6
-libgcc_s.so.1 =&gt; /usr/lib/libgcc_s.so.1
-/lib64/ld-linux-x86-64.so.2
-
-% size of each lib
-   text   data    bss      dec  filename
-1346264  17960  19136  1383360  libc.so.6
- 980584  33880  84664  1099128  libstdc++.so.6
- 524718    720     72   525510  libm.so.6
- 123386   7752  73248   204386  libustl.so.1
-  86645    936    632    88213  libgcc_s.so.1
+% footprint ustl/tes
+   text	   data	    bss	    dec	    hex	filename
+   2435	    616	     16	   3067	    bfb	tes
+  84445	    928	    632	  86005	  14ff5	libgcc_s.so.1
+ 152800	  10408	  73248	 236456	  39ba8	libustl.so.1.5
+1404487	  18024	  20032	1442543	 1602ef	libc.so.6
+1644167	  29976	  93928	1768071	 1afa87	(TOTALS)
 </pre><p>
-After adding up the numbers (from the dec column) std/tes loads
-3100170 bytes of shared libraries and ustl/tes loads 1678893 bytes,
-saving 1421277 bytes or 45%! If you don't count libc, measuring only the
-C++-specific overhead, libstdc++ loads 1716810 while libustl only 295533,
-<em>six times less</em>! Finally, much of uSTL's size comes from gcc's
+As you can see, the footprint for the uSTL version is 44% smaller,
+saving 1375048 bytes. If you don't count libc, measuring only the
+C++-specific overhead, libstdc++ loads 1696148 while libustl only 322461,
+<em>five times less</em>! Finally, most of uSTL's size comes from gcc's
 support libraries; if you compile uSTL configured <kbd>--with-libstdc++<kbd>
-option, then you'll see that it only takes up 73592 bytes, of which only
-23014 are used by .text, meaning that only about a third of the library
+option, then you'll see that it only takes up 72322 bytes, of which only
+23350 are used by .text, meaning that only about a third of the library
 size is my fault. gcc developers will have to reduce the size of libsupc++
 before any further size reduction would be practical.
+</p><p>
+One final note concerns the current gcc versions, 4.4 and later. gcc
+developers have decided, for various reasons, to treat the inline keyword
+as nothing more than a hint to the optimizer, resulting in a lot less
+inlining for uSTL-using code.  You can see which functions fail to inline
+if you turn on -Winline warning. Back in gcc 3 days there were various
+parameters that could be tweaked to get the inlining to happen. These no
+longer seem to work. Because it takes quite a bit of code to make these
+failures happen, I am unable to submit a gcc bug for it. Simple examples
+don't exhibit inlining failures and submitting the entire uSTL codebase
+seems inappropriate. Therefore I've pretty much given up on it. The only
+solution I can come up with is to just clobber the optimizer over the head
+with <code>#define inline __attribute__((always_inline)) inline</code>. It
+is enabled if you configure with <kbd>--force-inline</kbd>. The above
+examples are compiled with this option.
 </p>
 <h2><a name="Contact">Bug reporting</a></h2>
 <p>

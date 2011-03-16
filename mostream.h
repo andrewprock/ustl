@@ -27,7 +27,7 @@ class string;
 /// This class contains a set of functions to write integral types into an
 /// unstructured memory block. Packing binary file data can be done this
 /// way, for instance. aligning the data is your responsibility, and can
-/// be accomplished by proper ordering of writes and by calling \ref ostream::align.
+/// be accomplished by proper ordering of writes and by calling align.
 /// Unaligned access is usually slower by orders of magnitude and,
 /// on some architectures, such as PowerPC, can cause your program to crash.
 /// Therefore, all write functions have asserts to check alignment.
