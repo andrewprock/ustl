@@ -44,6 +44,10 @@ name=[without-mmx]
 desc=[	Disable use of MMX/SSE/3dNow! instructions]
 seds=[s/#define \(WANT_MMX\) 1/#undef \1/]
 }{
+name=[force-inline]
+desc=[	Make inline keyword mean always inline, not just a hint]
+seds=[s/#undef \(WANT_ALWAYS_INLINE\)/#define \1 1/]
+}{
 name=[with-libstdc++]
 desc=[Link with libstdc++]
 seds=[s/#define \(WITHOUT_LIBSTDCPP\) 1/#undef \1/\n

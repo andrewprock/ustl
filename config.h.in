@@ -71,6 +71,22 @@
     #endif
 #endif
 
+// Define to empty if 'const' does not conform to ANSI C.
+#undef const
+// Define as '__inline' if that is what the C compiler calls it
+#undef inline
+// Define to 'long' if <sys/types.h> does not define.
+#undef off_t
+// Define to 'unsigned' if <sys/types.h> does not define.
+#undef size_t
+
+/// gcc has lately decided that inline is just a suggestion
+/// Define to 1 if when you say 'inline' you mean it!
+#undef WANT_ALWAYS_INLINE
+#if WANT_ALWAYS_INLINE
+    #define inline INLINE inline
+#endif
+
 /// Define to 1 if you have the <assert.h> header file.
 #undef HAVE_ASSERT_H
 
@@ -230,14 +246,5 @@
 #else
     #define __sse_align	
 #endif
-
-// Define to empty if 'const' does not conform to ANSI C.
-#undef const
-// Define as '__inline' if that is what the C compiler calls it
-#undef inline
-// Define to 'long' if <sys/types.h> does not define.
-#undef off_t
-// Define to 'unsigned' if <sys/types.h> does not define.
-#undef size_t
 
 #endif
