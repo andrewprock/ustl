@@ -8,7 +8,7 @@
     <meta name="Description" content="API and usage description for uSTL, a size-optimized STL implementation" />
     <meta name="Keywords" content="C++, STL, template, bloat, optimization" />
     <meta name="author" content="Mike Sharov" />
-    <meta name="date" content="2009-08-04" />
+    <meta name="date" content="2011-03-16" />
 </head>
 <body>
 
@@ -708,7 +708,7 @@ As you can see, the footprint for the uSTL version is 44% smaller,
 saving 1375048 bytes. If you don't count libc, measuring only the
 C++-specific overhead, libstdc++ loads 1696148 while libustl only 322461,
 <em>five times less</em>! Finally, most of uSTL's size comes from gcc's
-support libraries; if you compile uSTL configured <kbd>--with-libstdc++<kbd>
+support libraries; if you compile uSTL configured <kbd>--with-libstdc++</kbd>
 option, then you'll see that it only takes up 72322 bytes, of which only
 23350 are used by .text, meaning that only about a third of the library
 size is my fault. gcc developers will have to reduce the size of libsupc++
