@@ -377,22 +377,22 @@ static void TestAlgorithms (void)
     v.resize (4);
     setEnd = set_difference (VectorRange(c_Set1), VectorRange(c_Set2), v.begin());
     PrintVector (v);
-    assert (setEnd == v.end());
+    if (setEnd != v.end()) cout << "incorrect range\n";
     cout << "set_symmetric_difference\n";
     v.resize (7);
     setEnd = set_symmetric_difference (VectorRange(c_Set1), VectorRange(c_Set2), v.begin());
     PrintVector (v);
-    assert (setEnd == v.end());
+    if (setEnd != v.end()) cout << "incorrect range\n";
     cout << "set_intersection\n";
     v.resize (2);
     setEnd = set_intersection (VectorRange(c_Set1), VectorRange(c_Set2), v.begin());
     PrintVector (v);
-    assert (setEnd == v.end());
+    if (setEnd != v.end()) cout << "incorrect range\n";
     cout << "set_union\n";
     v.resize (9);
     setEnd = set_union (VectorRange(c_Set1), VectorRange(c_Set2), v.begin());
     PrintVector (v);
-    assert (setEnd == v.end());
+    if (setEnd != v.end()) cout << "incorrect range\n";
     v.assign (first, last);
 }
 
