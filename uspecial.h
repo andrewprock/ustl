@@ -110,12 +110,14 @@ unconst (const pair<typename Container::const_iterator, typename Container::cons
 
 //----{ vector }--------------------------------------------------------
 
+#ifndef __GXX_EXPERIMENTAL_CXX0X__	// C++0x already has alignof
 template <typename T>
 inline size_t alignof (const vector<T>&)
 {
     typedef typename vector<T>::written_size_type written_size_type;
     return (alignof (written_size_type()));
 }
+#endif
 
 //----{ bitset }--------------------------------------------------------
 
@@ -151,8 +153,10 @@ struct numeric_limits<tuple<N,T> > {
     static const bool is_integral = value_limits::is_integral;
 };
 
+#ifndef __GXX_EXPERIMENTAL_CXX0X__	// C++0x already has alignof
 template <size_t N, typename T>
 inline size_t alignof (const tuple<N,T>&) { return (alignof (NullValue<T>())); }
+#endif
 
 template <typename T, typename IntT>
 inline ostringstream& chartype_text_write (ostringstream& os, const T& v)
