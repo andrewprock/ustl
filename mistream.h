@@ -256,7 +256,7 @@ inline void istream::align (streamsize grain)
 template <typename T>
 inline void istream::iread (T& v)
 {
-    assert (aligned (alignof (v)));
+    assert (aligned (stream_align_of (v)));
 #if WANT_STREAM_BOUNDS_CHECKING
     if (!verify_remaining ("read", typeid(v).name(), sizeof(T)))
 	return;

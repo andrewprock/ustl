@@ -47,6 +47,4 @@ private:
 
 } // namespace ustl
 
-ALIGNOF(ustl::CBacktrace, sizeof(void*))
-
 #endif

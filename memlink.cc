@@ -19,7 +19,7 @@ void memlink::read (istream& is)
 	throw length_error ("memlink can not increase the size of the linked storage for reading");
     resize (n);
     is.read (data(), n);
-    is.align (alignof (n));
+    is.align (stream_align_of (n));
 }
 
 /// Fills the linked block with the given pattern.

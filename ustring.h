@@ -264,7 +264,4 @@ inline hashvalue_t hash_value (const char* v)
 
 } // namespace ustl
 
-// Specialization for stream alignment
-ALIGNOF (ustl::string, alignof (string::value_type()))
-
 #endif

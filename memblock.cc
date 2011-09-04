@@ -129,7 +129,7 @@ void memblock::read (istream& is)
 	return;
     resize (n);
     is.read (data(), writable_size());
-    is.align (alignof (n));
+    is.align (stream_align_of (n));
 }
 
 /// Reads the entire file \p "filename".

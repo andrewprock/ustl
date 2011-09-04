@@ -29,17 +29,17 @@ void TestStreams (void)
 
     size_t totalSize = stream_size_of(c);
     totalSize += stream_size_of(uc);
-    totalSize = Align (totalSize, alignof(bv));
+    totalSize = Align (totalSize, stream_align_of(bv));
     totalSize += stream_size_of(bv);
-    totalSize = Align (totalSize, alignof(i));
+    totalSize = Align (totalSize, stream_align_of(i));
     totalSize += stream_size_of(i);
     totalSize += stream_size_of(ui);
     totalSize = Align (totalSize);
     totalSize += stream_size_of(li);
     totalSize += stream_size_of(uli);
-    totalSize = Align (totalSize, alignof(f));
+    totalSize = Align (totalSize, stream_align_of(f));
     totalSize += stream_size_of(f);
-    totalSize = Align (totalSize, alignof(d));
+    totalSize = Align (totalSize, stream_align_of(d));
     totalSize += stream_size_of(d);
     totalSize += stream_size_of(si);
     totalSize += stream_size_of(usi);
