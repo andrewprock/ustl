@@ -1,3 +1,11 @@
+2012-02-18 Release 1.6
+	* Fixed compilation with c++0x
+	    alignof is a keyword in c++0x, so the stream version usually not needed now.
+	    On the other hand, alignof can not be overloaded, so stream_align_of is the
+	    new name for the old alignof. Most code should not require changes due to this.
+	* Fix iat in string, which did not handle npos argument correctly, sometimes
+	    resulting in failures of other functions using it, like substr.
+
 2011-03-16 Release 1.5
 	* Updated set, map, and multimap with full set of insert, erase, and search overloads
 	* Added public lower_bound, upper_bound, and equal_range to map, as per standard
