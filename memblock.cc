@@ -115,9 +115,11 @@ memblock::iterator memblock::erase (iterator start, size_type n)
 {
     const uoff_t ep = start - begin();
     assert (ep + n <= size());
-    memlink::erase (start, n);
+    reserve (size() - n);
+    iterator iep = iat(ep);
+    memlink::erase (iep, n);
     memlink::resize (size() - n);
-    return (iat (ep));
+    return (iep);
 }
 
 /// Reads the object from stream \p s
