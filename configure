@@ -17,39 +17,39 @@ FILES="Config.mk config.h"
 COMPONENTS='
 {
 name=[without-shared]
-desc=[Builds the shared library (if supported by the OS)]
+desc=[do not build the shared library]
 seds=[s/^\(BUILD_SHARED\)/#\1/]
 }{
 name=[with-static]
-desc=[	Builds the static library]
-seds=[s/^#\(BUILD_STATIC\)/\1/]
+desc=[	build the static library]
+seds=[s/^#\(BUILD_STATIC\)/\1/;s/-fno-enforce-eh-specs/-fno-enforce-eh-specs -ffunction-sections -fdata-sections/;s/-gc-sections/-gc-sections -static-libgcc/]
 }{
 name=[with-debug]
-desc=[	Compile for debugging]
+desc=[	compile for debugging]
 seds=[s/^#\(DEBUG\)/\1/]
 }{
 name=[with-demangler]
-desc=[Demangle C++ symbols in backtrace]
+desc=[demangle C++ symbols in backtrace]
 seds=[s/#undef \(WANT_NAME_DEMANGLING\)/#define \1 1/]
 }{
 name=[without-bounds]
-desc=[Disable runtime bounds checking on stream reads/writes]
+desc=[disable runtime bounds checking on stream reads/writes]
 seds=[s/#define \(WANT_STREAM_BOUNDS_CHECKING\) 1/#undef \1/]
 }{
 name=[without-fastcopy]
-desc=[Disable specializations for copy/fill]
+desc=[disable specializations for copy/fill]
 seds=[s/#define \(WANT_UNROLLED_COPY\) 1/#undef \1/]
 }{
 name=[without-mmx]
-desc=[	Disable use of MMX/SSE/3dNow! instructions]
+desc=[	disable use of MMX/SSE/3dNow! instructions]
 seds=[s/#define \(WANT_MMX\) 1/#undef \1/]
 }{
 name=[force-inline]
-desc=[	Make inline keyword mean always inline, not just a hint]
+desc=[make inline keyword mean always inline, not just a hint]
 seds=[s/#undef \(WANT_ALWAYS_INLINE\)/#define \1 1/]
 }{
 name=[with-libstdc++]
-desc=[Link with libstdc++]
+desc=[link with libstdc++]
 seds=[s/#define \(WITHOUT_LIBSTDCPP\) 1/#undef \1/;s/\(NOLIBSTDCPP\)/#\1/]
 }';
 
@@ -94,7 +94,7 @@ die() { rm -f config.sed config.cpu config.cpu.c; exit; }
 
 if [ -z "$CC" ]; then
     for i in gcc g++ cc c++ c89 c99; do
-	CC=`which $i 2> /dev/null` && break
+	CC=`which $i 2>/dev/null` && break
     done
 fi
 [ -z "$CC" ] && "No C compiler found" && die
@@ -463,7 +463,7 @@ for i in $PROGS; do
     # First check if an environment variable is set
     [ ! -z "$esciv" ] && echo "s/@$pname@/$esciv/g" >>config.sed
     # Check if the program exists
-    [ -x `which $pcall` ] && echo "s/@$pname@/$pcall/g" >>config.sed
+    [ -x `which $pcall 2>/dev/null` ] && echo "s/@$pname@/$pcall/g" >>config.sed
 done
 # If nothing found in first loop, set the first pair anyway.
 for i in $PROGS; do
