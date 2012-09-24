@@ -13,7 +13,7 @@ void TestString (void)
     static const char c_TestString2[] = "abcdefghijklmnopqrstuvwxyz";
     static const char c_TestString3[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     string s1 (c_TestString1);
-    string s2 (VectorRange (c_TestString2));
+    string s2 (VectorRange(c_TestString2)-1);
     string s3 (s1);
 
     cout << s1 << endl;
