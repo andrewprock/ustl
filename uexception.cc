@@ -30,13 +30,13 @@ namespace ustl {
 ///
 void exception::info (string& msgbuf, const char*) const throw()
 {
-    try { msgbuf.format ("%s", what()); } catch (...) { /* Ignore all exceptions */ }
+    try { msgbuf.format ("%s", what()); } catch (...) {} // Ignore all exceptions
 }
 
 /// Reads the exception from stream \p is.
 void exception::read (istream& is)
 {
-    uint32_t stmSize;
+    uint32_t stmSize = 0;
     xfmt_t fmt = xfmt_Exception;
     is >> fmt >> stmSize >> m_Backtrace;
     assert (fmt == m_Format && "The saved exception is of a different type.");
@@ -124,11 +124,11 @@ const libc_exception& libc_exception::operator= (const libc_exception& v)
     return (*this);
 }
 
-/// Returns a descriptive error message. fmt="%s: %m"
+/// Returns a descriptive error message. fmt="%s: %s"
 void libc_exception::info (string& msgbuf, const char* fmt) const throw()
 {
-    if (!fmt) fmt = "%s: %m";
-    try { msgbuf.format (fmt, m_Operation, m_Errno, m_Errno); } catch (...) {}
+    if (!fmt) fmt = "%s: %s";
+    try { msgbuf.format (fmt, m_Operation, strerror(m_Errno)); } catch (...) {}
 }
 
 /// Reads the exception from stream \p is.
@@ -167,11 +167,11 @@ file_exception::file_exception (const char* operation, const char* filename) thr
     }
 }
 
-/// Returns a descriptive error message. fmt="%s %s: %m"
+/// Returns a descriptive error message. fmt="%s %s: %s"
 void file_exception::info (string& msgbuf, const char* fmt) const throw()
 {
-    if (!fmt) fmt = "%s %s: %m";
-    try { msgbuf.format (fmt, m_Operation, m_Filename, m_Errno, m_Errno); } catch (...) {}
+    if (!fmt) fmt = "%s %s: %s";
+    try { msgbuf.format (fmt, m_Operation, m_Filename, strerror(m_Errno)); } catch (...) {}
 }
 
 /// Reads the exception from stream \p is.
