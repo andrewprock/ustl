@@ -56,7 +56,7 @@ seds=[s/#define \(WITHOUT_LIBSTDCPP\) 1/#undef \1/;s/\(NOLIBSTDCPP\)/#\1/]
 # Header files
 HEADERS="assert.h ctype.h errno.h fcntl.h float.h inttypes.h limits.h stdio.h
 locale.h alloca.h signal.h stdarg.h stddef.h sys/stat.h sys/types.h stdint.h
-stdlib.h string.h time.h unistd.h math.h stdlib.h";
+stdlib.h string.h time.h unistd.h math.h stdlib.h sys/mman.h";
 
 # Libraries
 LIBS="supc++ gcc_eh SystemStubs"

@@ -10,8 +10,10 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/stat.h>
-#include <sys/mman.h>
 #include <sys/ioctl.h>
+#if HAVE_SYS_MMAN_H
+    #include <sys/mman.h>
+#endif
 
 namespace ustl {
 
@@ -224,6 +226,16 @@ int fstream::fcntl (const char* rname, int request, long argument)
     return (rv);
 }
 
+void fstream::set_nonblock (bool v)
+{
+    int curf = max (0, fcntl (FCNTLID (F_GETFL)));
+    if (v) curf |=  O_NONBLOCK;
+    else   curf &= ~O_NONBLOCK;
+    fcntl (FCNTLID (F_SETFL), curf);
+}
+
+#if HAVE_SYS_MMAN_H
+
 /// Memory-maps the file and returns a link to it.
 memlink fstream::mmap (off_t n, off_t offset)
 {
@@ -248,12 +260,6 @@ void fstream::msync (memlink& l)
 	set_and_throw (failbit, "msync");
 }
 
-void fstream::set_nonblock (bool v)
-{
-    int curf = max (0, fcntl (FCNTLID (F_GETFL)));
-    if (v) curf |=  O_NONBLOCK;
-    else   curf &= ~O_NONBLOCK;
-    fcntl (FCNTLID (F_SETFL), curf);
-}
+#endif
 
 } // namespace ustl
