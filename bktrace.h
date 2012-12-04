@@ -28,16 +28,16 @@ class ostream;
 ///
 class CBacktrace {
 public:
-			CBacktrace (void) throw();
-			CBacktrace (const CBacktrace& v) throw();
-    inline		~CBacktrace (void) throw()	{ if (m_Symbols) free (m_Symbols); }
-    const CBacktrace&	operator= (const CBacktrace& v) throw();
+			CBacktrace (void) noexcept;
+			CBacktrace (const CBacktrace& v) noexcept;
+    inline		~CBacktrace (void) noexcept	{ if (m_Symbols) free (m_Symbols); }
+    const CBacktrace&	operator= (const CBacktrace& v) noexcept;
     void		text_write (ostringstream& os) const;
     void		read (istream& is);
     void		write (ostream& os) const;
     size_t		stream_size (void) const;
 private:
-    void		GetSymbols (void) throw() DLL_LOCAL;
+    void		GetSymbols (void) noexcept DLL_LOCAL;
 private:
     void*		m_Addresses [64];	///< Addresses of each function on the stack.
     char*		m_Symbols;		///< Symbols corresponding to each address.

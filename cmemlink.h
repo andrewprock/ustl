@@ -53,12 +53,12 @@ public:
     inline		cmemlink (void)				: m_Data (NULL), m_Size (0) { }
     inline		cmemlink (const void* p, size_type n)	: m_Data (const_pointer(p)), m_Size (n) { assert (p || !n); }
     inline		cmemlink (const cmemlink& l)		: m_Data (l.m_Data), m_Size (l.m_Size) {}
-    inline virtual     ~cmemlink (void) throw()			{}
+    inline virtual     ~cmemlink (void) noexcept			{}
     void		link (const void* p, size_type n);
     inline void		link (const cmemlink& l)	{ link (l.begin(), l.size()); }
     inline void		link (const void* first, const void* last)	{ link (first, distance (first, last)); }
     inline void		relink (const void* p, size_type n);
-    virtual void	unlink (void) throw()		{ m_Data = NULL; m_Size = 0; }
+    virtual void	unlink (void) noexcept		{ m_Data = NULL; m_Size = 0; }
     inline rcself_t	operator= (const cmemlink& l)	{ link (l); return (*this); }
     bool		operator== (const cmemlink& l) const;
     inline void		swap (cmemlink& l)		{ ::ustl::swap (m_Data, l.m_Data); ::ustl::swap (m_Size, l.m_Size); }

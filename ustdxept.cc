@@ -15,7 +15,7 @@ namespace ustl {
 //----------------------------------------------------------------------
 
 /// \p arg contains a description of the error.
-error_message::error_message (const char* arg) throw()
+error_message::error_message (const char* arg) noexcept
 : m_Arg ()
 {
     try { m_Arg = arg; } catch (...) {}
@@ -23,12 +23,12 @@ error_message::error_message (const char* arg) throw()
 }
 
 /// Virtual destructor
-error_message::~error_message (void) throw()
+error_message::~error_message (void) noexcept
 {
 }
 
 /// Returns a descriptive error message. fmt="%s: %s"
-void error_message::info (string& msgbuf, const char* fmt) const throw()
+void error_message::info (string& msgbuf, const char* fmt) const noexcept
 {
     if (!fmt) fmt = "%s: %s";
     try { msgbuf.format (fmt, name(), m_Arg.cdata()); } catch (...) {}

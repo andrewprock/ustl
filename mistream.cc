@@ -28,8 +28,8 @@ istream::istream (const ostream& source)
 {
 }
 
-void istream::unlink (void) throw()			{ cmemlink::unlink(); m_Pos = 0; }
-void ostream::unlink (void) throw()		{ memlink::unlink(); m_Pos = 0; }
+void istream::unlink (void) noexcept			{ cmemlink::unlink(); m_Pos = 0; }
+void ostream::unlink (void) noexcept		{ memlink::unlink(); m_Pos = 0; }
 
 /// Writes all unread bytes into \p os.
 void istream::write (ostream& os) const

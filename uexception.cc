@@ -28,7 +28,7 @@ namespace ustl {
 /// not throw anything, so you must wrap memory allocation routines
 /// (like string::format, for instance) in a try{}catch(...){} block.
 ///
-void exception::info (string& msgbuf, const char*) const throw()
+void exception::info (string& msgbuf, const char*) const noexcept
 {
     try { msgbuf.format ("%s", what()); } catch (...) {} // Ignore all exceptions
 }
@@ -63,7 +63,7 @@ void exception::text_write (ostringstream& os) const
 //----------------------------------------------------------------------
 
 /// Initializes the empty object. \p nBytes is the size of the attempted allocation.
-bad_alloc::bad_alloc (size_t nBytes) throw()
+bad_alloc::bad_alloc (size_t nBytes) noexcept
 : ustl::exception(),
   m_nBytesRequested (nBytes)
 {
@@ -71,7 +71,7 @@ bad_alloc::bad_alloc (size_t nBytes) throw()
 }
 
 /// Returns a descriptive error message. fmt="failed to allocate %d bytes"
-void bad_alloc::info (string& msgbuf, const char* fmt) const throw()
+void bad_alloc::info (string& msgbuf, const char* fmt) const noexcept
 {
     if (!fmt) fmt = "failed to allocate %d bytes";
     try { msgbuf.format (fmt, m_nBytesRequested); } catch (...) {}
@@ -100,7 +100,7 @@ size_t bad_alloc::stream_size (void) const
 //----------------------------------------------------------------------
 
 /// Initializes the empty object. \p operation is the function that returned the error code.
-libc_exception::libc_exception (const char* operation) throw()
+libc_exception::libc_exception (const char* operation) noexcept
 : exception(),
   m_Errno (errno),
   m_Operation (operation)
@@ -109,7 +109,7 @@ libc_exception::libc_exception (const char* operation) throw()
 }
 
 /// Copies object \p v.
-libc_exception::libc_exception (const libc_exception& v) throw()
+libc_exception::libc_exception (const libc_exception& v) noexcept
 : exception (v),
   m_Errno (v.m_Errno),
   m_Operation (v.m_Operation)
@@ -125,7 +125,7 @@ const libc_exception& libc_exception::operator= (const libc_exception& v)
 }
 
 /// Returns a descriptive error message. fmt="%s: %s"
-void libc_exception::info (string& msgbuf, const char* fmt) const throw()
+void libc_exception::info (string& msgbuf, const char* fmt) const noexcept
 {
     if (!fmt) fmt = "%s: %s";
     try { msgbuf.format (fmt, m_Operation, strerror(m_Errno)); } catch (...) {}
@@ -156,7 +156,7 @@ size_t libc_exception::stream_size (void) const
 //----------------------------------------------------------------------
 
 /// Initializes the empty object. \p operation is the function that returned the error code.
-file_exception::file_exception (const char* operation, const char* filename) throw()
+file_exception::file_exception (const char* operation, const char* filename) noexcept
 : libc_exception (operation)
 {
     memset (m_Filename, 0, VectorSize(m_Filename));
@@ -168,7 +168,7 @@ file_exception::file_exception (const char* operation, const char* filename) thr
 }
 
 /// Returns a descriptive error message. fmt="%s %s: %s"
-void file_exception::info (string& msgbuf, const char* fmt) const throw()
+void file_exception::info (string& msgbuf, const char* fmt) const noexcept
 {
     if (!fmt) fmt = "%s %s: %s";
     try { msgbuf.format (fmt, m_Operation, m_Filename, strerror(m_Errno)); } catch (...) {}
@@ -230,7 +230,7 @@ const char* demangle_type_name (char* buf, size_t bufSize, size_t* pdmSize)
 //----------------------------------------------------------------------
 
 /// Initializes the empty object. \p operation is the function that returned the error code.
-stream_bounds_exception::stream_bounds_exception (const char* operation, const char* type, uoff_t offset, size_t expected, size_t remaining) throw()
+stream_bounds_exception::stream_bounds_exception (const char* operation, const char* type, uoff_t offset, size_t expected, size_t remaining) noexcept
 : libc_exception (operation),
   m_TypeName (type),
   m_Offset (offset),
@@ -241,7 +241,7 @@ stream_bounds_exception::stream_bounds_exception (const char* operation, const c
 }
 
 /// Returns a descriptive error message. fmt="%s stream %s: @%u: expected %u, available %u";
-void stream_bounds_exception::info (string& msgbuf, const char* fmt) const throw()
+void stream_bounds_exception::info (string& msgbuf, const char* fmt) const noexcept
 {
     char typeName [256];
     strncpy (typeName, m_TypeName, VectorSize(typeName));

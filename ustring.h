@@ -174,7 +174,7 @@ public:
     size_t			stream_size (void) const;
     static hashvalue_t		hash (const char* f1, const char* l1);
 protected:
-    virtual size_type		minimumFreeCapacity (void) const throw() __attribute__((const));
+    virtual size_type		minimumFreeCapacity (void) const noexcept __attribute__((const));
 };
 
 //----------------------------------------------------------------------

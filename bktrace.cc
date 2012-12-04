@@ -16,7 +16,7 @@
 namespace ustl {
 
 /// Default constructor. The backtrace is obtained here.
-CBacktrace::CBacktrace (void) throw()
+CBacktrace::CBacktrace (void) noexcept
 : m_Symbols (NULL),
   m_nFrames (0),
   m_SymbolsSize (0)
@@ -26,7 +26,7 @@ CBacktrace::CBacktrace (void) throw()
 }
 
 /// Copy constructor.
-CBacktrace::CBacktrace (const CBacktrace& v) throw()
+CBacktrace::CBacktrace (const CBacktrace& v) noexcept
 : m_Symbols (NULL),
   m_nFrames (0),
   m_SymbolsSize (0)
@@ -35,7 +35,7 @@ CBacktrace::CBacktrace (const CBacktrace& v) throw()
 }
 
 /// Copy operator.
-const CBacktrace& CBacktrace::operator= (const CBacktrace& v) throw()
+const CBacktrace& CBacktrace::operator= (const CBacktrace& v) noexcept
 {
     memcpy (m_Addresses, v.m_Addresses, sizeof(m_Addresses));
     m_Symbols = strdup (v.m_Symbols);
@@ -45,7 +45,7 @@ const CBacktrace& CBacktrace::operator= (const CBacktrace& v) throw()
 }
 
 /// Converts a string returned by backtrace_symbols into readable form.
-static size_t ExtractAbiName (const char* isym, char* nmbuf) throw()
+static size_t ExtractAbiName (const char* isym, char* nmbuf) noexcept
 {
     // Prepare the demangled name, if possible
     size_t nmSize = 0;
@@ -68,7 +68,7 @@ static size_t ExtractAbiName (const char* isym, char* nmbuf) throw()
 }
 
 /// Tries to get symbol information for the addresses.
-void CBacktrace::GetSymbols (void) throw()
+void CBacktrace::GetSymbols (void) noexcept
 {
     char** symbols = backtrace_symbols (m_Addresses, m_nFrames);
     if (!symbols)

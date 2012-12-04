@@ -386,6 +386,6 @@ void string::write (ostream& os) const
     return (h);
 }
 
-string::size_type string::minimumFreeCapacity (void) const throw() { return (1); }
+string::size_type string::minimumFreeCapacity (void) const noexcept { return (1); }
 
 } // namespace ustl

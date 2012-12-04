@@ -18,9 +18,9 @@ memblock::memblock (size_type n)		: memlink (), m_Capacity (0) { resize (n); }
 memblock::memblock (const cmemlink& b)		: memlink (), m_Capacity (0) { assign (b); }
 memblock::memblock (const memlink& b)		: memlink (), m_Capacity (0) { assign (b); }
 memblock::memblock (const memblock& b)		: memlink (), m_Capacity (0) { assign (b); }
-memblock::~memblock (void) throw()		{ deallocate(); }
+memblock::~memblock (void) noexcept		{ deallocate(); }
 
-void memblock::unlink (void) throw()
+void memblock::unlink (void) noexcept
 {
     m_Capacity = 0;
     memlink::unlink();
@@ -35,7 +35,7 @@ void memblock::resize (size_type newSize, bool bExact)
 }
 
 /// Frees internal data.
-void memblock::deallocate (void) throw()
+void memblock::deallocate (void) noexcept
 {
     if (m_Capacity) {
 	assert (cdata() && "Internal error: space allocated, but the pointer is NULL");
@@ -147,6 +147,6 @@ void memblock::read_file (const char* filename)
     resize (fsize);
 }
 
-memblock::size_type memblock::minimumFreeCapacity (void) const throw() { return (0); }
+memblock::size_type memblock::minimumFreeCapacity (void) const noexcept { return (0); }
 
 } // namespace ustl

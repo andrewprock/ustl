@@ -80,7 +80,7 @@ public:
     template <typename T>
     inline void		iwrite (const T& v);
     inline virtual streamsize	overflow (streamsize = 1){ return (remaining()); }
-    virtual void	unlink (void) throw();
+    virtual void	unlink (void) noexcept;
     inline void		link (void* p, streamsize n)	{ memlink::link (p, n); }
     inline void		link (memlink& l)		{ memlink::link (l.data(), l.writable_size()); }
     inline void		link (void* f, void* l)		{ memlink::link (f, l); }

@@ -20,7 +20,7 @@ public:
 			ofstream (void);
     explicit		ofstream (int Fd);
     explicit		ofstream (const char* filename, openmode mode = out);
-    virtual	       ~ofstream (void) throw();
+    virtual	       ~ofstream (void) noexcept;
     inline void		open (const char* filename, openmode mode = out) { m_File.open (filename, mode); clear (m_File.rdstate()); }
     void		close (void);
     inline bool		is_open (void) const	{ return (m_File.is_open()); }

@@ -28,8 +28,8 @@ public:
     explicit			memblock (const cmemlink& b);
     explicit			memblock (const memlink& b);
 				memblock (const memblock& b);
-    virtual			~memblock (void) throw();
-    virtual void		unlink (void) throw();
+    virtual			~memblock (void) noexcept;
+    virtual void		unlink (void) noexcept;
     inline void			assign (const cmemlink& l)	{ assign (l.cdata(), l.readable_size()); }
     inline const memblock&	operator= (const cmemlink& l)	{ assign (l); return (*this); }
     inline const memblock&	operator= (const memlink& l)	{ assign (l); return (*this); }
@@ -45,13 +45,13 @@ public:
     inline bool			is_linked (void) const		{ return (!capacity()); }
     inline size_type		max_size (void) const		{ return (is_linked() ? memlink::max_size() : SIZE_MAX); }
     inline void			manage (memlink& l)		{ manage (l.begin(), l.size()); }
-    void			deallocate (void) throw();
+    void			deallocate (void) noexcept;
     void			manage (void* p, size_type n);
     void			copy_link (void);
     void			read (istream& is);
     void			read_file (const char* filename);
 protected:
-    virtual size_type		minimumFreeCapacity (void) const throw() __attribute__((const));
+    virtual size_type		minimumFreeCapacity (void) const noexcept __attribute__((const));
 private:
     size_type			m_Capacity;	///< Number of bytes allocated by Resize.
 };

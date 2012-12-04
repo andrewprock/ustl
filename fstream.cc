@@ -45,7 +45,7 @@ fstream::fstream (int nfd, const char* filename)
 }
 
 /// Destructor. Closes if still open, but without throwing.
-fstream::~fstream (void) throw()
+fstream::~fstream (void) noexcept
 {
     clear (goodbit);
     exceptions (goodbit);

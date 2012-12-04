@@ -27,7 +27,7 @@ public:
 			fstream (void);
     explicit		fstream (const char* filename, openmode mode = in | out);
     explicit		fstream (int nfd, const char* filename = "");
-		       ~fstream (void) throw();
+		       ~fstream (void) noexcept;
     void		open (const char* filename, openmode mode, mode_t perms = 0644);
     void		attach (int nfd, const char* filename = "");
     void		detach (void);

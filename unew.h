@@ -12,7 +12,7 @@
 /// Just like malloc, but throws on failure.
 void* tmalloc (size_t n) throw (ustl::bad_alloc) __attribute__((malloc));
 /// Just like free, but doesn't crash when given a NULL.
-inline void nfree (void* p) throw() { if (p) free (p); }
+inline void nfree (void* p) noexcept { if (p) free (p); }
 
 #if WITHOUT_LIBSTDCPP
 
@@ -29,16 +29,16 @@ inline void nfree (void* p) throw() { if (p) free (p); }
 //
 inline void* operator new (size_t n) throw (ustl::bad_alloc)	{ return (tmalloc (n)); }
 inline void* operator new[] (size_t n) throw (ustl::bad_alloc)	{ return (tmalloc (n)); }
-inline void  operator delete (void* p) throw()			{ nfree (p); }
-inline void  operator delete[] (void* p) throw()		{ nfree (p); }
+inline void  operator delete (void* p) noexcept			{ nfree (p); }
+inline void  operator delete[] (void* p) noexcept		{ nfree (p); }
 
 // Default placement versions of operator new.
-inline void* operator new (size_t, void* p) throw() { return (p); }
-inline void* operator new[] (size_t, void* p) throw() { return (p); }
+inline void* operator new (size_t, void* p) noexcept { return (p); }
+inline void* operator new[] (size_t, void* p) noexcept { return (p); }
 
 // Default placement versions of operator delete.
-inline void  operator delete  (void*, void*) throw() { }
-inline void  operator delete[](void*, void*) throw() { }
+inline void  operator delete  (void*, void*) noexcept { }
+inline void  operator delete[](void*, void*) noexcept { }
 
 #else
 #include <new>

@@ -20,17 +20,17 @@ typedef void (*terminate_handler) (void);
 /// If you write a replacement unexpected handler, it must be of this type.
 typedef void (*unexpected_handler) (void);
 /// Takes a new handler function as an argument, returns the old function.
-terminate_handler set_terminate (terminate_handler pHandler) throw();
+terminate_handler set_terminate (terminate_handler pHandler) noexcept;
 /// The runtime will call this function if exception handling must be
 /// abandoned for any reason.  It can also be called by the user.
-void terminate (void) throw() __attribute__ ((__noreturn__));
+void terminate (void) noexcept __attribute__ ((__noreturn__));
 /// Takes a new handler function as an argument, returns the old function.
-unexpected_handler set_unexpected (unexpected_handler pHandler) throw();
+unexpected_handler set_unexpected (unexpected_handler pHandler) noexcept;
 /// The runtime will call this function if an exception is thrown which
 /// violates the function's exception specification.
 void unexpected (void) __attribute__ ((__noreturn__));
 /// Returns true when the caught exception violates the throw specification.
-bool uncaught_exception() throw();
+bool uncaught_exception() noexcept;
 } // namespace std
 #endif
 
@@ -61,10 +61,10 @@ class exception : public std::exception {
 public:
     typedef const CBacktrace& rcbktrace_t;
 public:
-    inline		exception (void) throw() : m_Format (xfmt_Exception) {}
-    inline virtual     ~exception (void) throw() {}
-    inline virtual const char* what (void) const throw() { return ("error"); }
-    virtual void	info (string& msgbuf, const char* fmt = NULL) const throw();
+    inline		exception (void) noexcept : m_Format (xfmt_Exception) {}
+    inline virtual     ~exception (void) noexcept {}
+    inline virtual const char* what (void) const noexcept { return ("error"); }
+    virtual void	info (string& msgbuf, const char* fmt = NULL) const noexcept;
     virtual void	read (istream& is);
     virtual void	write (ostream& os) const;
     void		text_write (ostringstream& os) const;
@@ -88,14 +88,14 @@ private:
 ///
 class bad_cast : public exception {
 public:
-    inline 			bad_cast (void) throw()		: exception() {}
-    inline virtual const char*	what (void) const throw()	{ return ("bad cast"); }
+    inline 			bad_cast (void) noexcept		: exception() {}
+    inline virtual const char*	what (void) const noexcept	{ return ("bad cast"); }
 };
 
 class bad_typeid : public exception {
 public:
-    inline			bad_typeid (void) throw()	{ }
-    inline virtual const char*	what (void) const throw()	{ return ("bad typeid"); }
+    inline			bad_typeid (void) noexcept	{ }
+    inline virtual const char*	what (void) const noexcept	{ return ("bad typeid"); }
 };
 
 //----------------------------------------------------------------------
@@ -111,9 +111,9 @@ class bad_alloc : public exception {
 class bad_alloc : public std::bad_alloc, public exception {
 #endif
 public:
-    explicit		bad_alloc (size_t nBytes = 0) throw();
-    inline virtual const char*	what (void) const throw() { return ("memory allocation failed"); }
-    virtual void	info (string& msgbuf, const char* fmt = NULL) const throw();
+    explicit		bad_alloc (size_t nBytes = 0) noexcept;
+    inline virtual const char*	what (void) const noexcept { return ("memory allocation failed"); }
+    virtual void	info (string& msgbuf, const char* fmt = NULL) const noexcept;
     virtual void	read (istream& is);
     virtual void	write (ostream& os) const;
     virtual size_t	stream_size (void) const;
@@ -130,11 +130,11 @@ protected:
 ///
 class libc_exception : public exception {
 public:
-    explicit		libc_exception (const char* operation) throw();
-			libc_exception (const libc_exception& v) throw();
+    explicit		libc_exception (const char* operation) noexcept;
+			libc_exception (const libc_exception& v) noexcept;
     const libc_exception& operator= (const libc_exception& v);
-    inline virtual const char*	what (void) const throw() { return ("libc function failed"); }
-    virtual void	info (string& msgbuf, const char* fmt = NULL) const throw();
+    inline virtual const char*	what (void) const noexcept { return ("libc function failed"); }
+    virtual void	info (string& msgbuf, const char* fmt = NULL) const noexcept;
     virtual void	read (istream& is);
     virtual void	write (ostream& os) const;
     virtual size_t	stream_size (void) const;
@@ -152,9 +152,9 @@ protected:
 ///
 class file_exception : public libc_exception {
 public:
-			file_exception (const char* operation, const char* filename) throw();
-    inline virtual const char* what (void) const throw() { return ("file error"); }
-    virtual void	info (string& msgbuf, const char* fmt = NULL) const throw();
+			file_exception (const char* operation, const char* filename) noexcept;
+    inline virtual const char* what (void) const noexcept { return ("file error"); }
+    virtual void	info (string& msgbuf, const char* fmt = NULL) const noexcept;
     virtual void	read (istream& is);
     virtual void	write (ostream& os) const;
     virtual size_t	stream_size (void) const;
@@ -172,9 +172,9 @@ protected:
 ///
 class stream_bounds_exception : public libc_exception {
 public:
-			stream_bounds_exception (const char* operation, const char* type, uoff_t offset, size_t expected, size_t remaining) throw();
-    inline virtual const char*	what (void) const throw() { return ("stream bounds exception"); }
-    virtual void	info (string& msgbuf, const char* fmt = NULL) const throw();
+			stream_bounds_exception (const char* operation, const char* type, uoff_t offset, size_t expected, size_t remaining) noexcept;
+    inline virtual const char*	what (void) const noexcept { return ("stream bounds exception"); }
+    virtual void	info (string& msgbuf, const char* fmt = NULL) const noexcept;
     virtual void	read (istream& is);
     virtual void	write (ostream& os) const;
     virtual size_t	stream_size (void) const;
