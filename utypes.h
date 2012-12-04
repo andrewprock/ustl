@@ -22,12 +22,13 @@
 #else
     #error "Need standard integer types definitions, usually in stdint.h"
 #endif
-#include <stddef.h>		// For ptrdiff_t, size_t
-#include <limits.h>
-#include <float.h>
 #if HAVE_SYS_TYPES_H
     #include <sys/types.h>
 #endif
+#include <stddef.h>		// For ptrdiff_t, size_t
+#include <limits.h>
+#include <float.h>
+#include <unistd.h>
 #ifndef SIZE_MAX
     #define SIZE_MAX		UINT_MAX
 #endif
