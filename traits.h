@@ -5,9 +5,7 @@
 // This implementation is adapted from the Loki library, distributed under
 // the MIT license with Copyright (c) 2001 by Andrei Alexandrescu.
 
-#ifndef TRAITS_H_4AA3DDE15E16C947392711ED08FB1FF6
-#define TRAITS_H_4AA3DDE15E16C947392711ED08FB1FF6
-
+#pragma once
 #include "typelist.h"
 
 namespace ustl {
@@ -247,5 +245,3 @@ public:
 
 } // namespace tm
 } // namespace ustl
-
-#endif

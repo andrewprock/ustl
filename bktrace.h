@@ -3,9 +3,7 @@
 // Copyright (c) 2006 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef BKTRACE_H_63ABB1E4388CEDD975DBE58B57DE474F
-#define BKTRACE_H_63ABB1E4388CEDD975DBE58B57DE474F
-
+#pragma once
 #include "ulimits.h"
 #include <stdlib.h>
 
@@ -46,5 +44,3 @@ private:
 };
 
 } // namespace ustl
-
-#endif

@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef MEMLINK_H_798D25827C8E322D2D7E734B169FF5FC
-#define MEMLINK_H_798D25827C8E322D2D7E734B169FF5FC
-
+#pragma once
 #include "cmemlink.h"
 #include "ualgo.h"
 
@@ -95,5 +93,3 @@ inline void memlink::erase (iterator start, size_type n)
 #define alloca_link(m,n)	(m).link (alloca (n), (n))
 
 } // namespace ustl
-
-#endif

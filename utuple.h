@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UTUPLE_H_7324ADEC49B397CA74A56F6050FD5A6B
-#define UTUPLE_H_7324ADEC49B397CA74A56F6050FD5A6B
-
+#pragma once
 #include "ualgo.h"
 #include "metamac.h"
 
@@ -328,5 +326,3 @@ SIMD_TUPLE_PACKOP(8,uint8_t)
 #undef SIMD_TUPLE_PACKOP
 
 } // namespace ustl
-
-#endif

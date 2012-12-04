@@ -2,14 +2,11 @@
 //
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
-//
-#ifndef TYPEINFO_H_E67A267F0BBB5005
-#define TYPEINFO_H_E67A267F0BBB5005
 
+#pragma once
 #ifndef WITHOUT_LIBSTDCPP
     #include <typeinfo>
 #else
-
 #include "uexception.h"
 
 namespace __cxxabiv1 { class __class_type_info; }
@@ -36,5 +33,4 @@ protected:
 
 } // namespace std
 
-#endif
 #endif

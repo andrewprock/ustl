@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef ULIST_H_54E3B510498982C87A0A1E1932E6729D
-#define ULIST_H_54E3B510498982C87A0A1E1932E6729D
-
+#pragma once
 #include "uvector.h"
 #include "uctralgo.h"
 
@@ -69,5 +67,3 @@ void list<T>::splice (iterator ip, list<T>& l, iterator first, iterator last)
 #define deque list ///< list has all the functionality provided by deque
 
 } // namespace ustl
-
-#endif

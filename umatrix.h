@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UMATRIX_H_740EBFEF554E833645E0FD72419A8185
-#define UMATRIX_H_740EBFEF554E833645E0FD72419A8185
-
+#pragma once
 #include "utuple.h"
 
 namespace ustl {
@@ -117,5 +115,3 @@ SSE_TUPLE_SPECS(16,uint32_t)
 #endif
 
 } // namespace ustl
-
-#endif

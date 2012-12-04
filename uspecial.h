@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef USPECIAL_H_947ADYOU0ARE3YOU2REALLY8ARE44CE0
-#define USPECIAL_H_947ADYOU0ARE3YOU2REALLY8ARE44CE0
-
+#pragma once
 #include "uvector.h"
 #include "ustring.h"
 #include "uset.h"
@@ -259,5 +257,3 @@ ALIGNOF (_long4grain, 4)
 
 ALIGNOF(ustl::CBacktrace, sizeof(void*))
 ALIGNOF (ustl::string, stream_align_of (string::value_type()))
-
-#endif

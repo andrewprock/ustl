@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UVECTOR_H_00BB13AF082BEB7829C031B265518169
-#define UVECTOR_H_00BB13AF082BEB7829C031B265518169
-
+#pragma once
 #include "memblock.h"
 #include "umemory.h"
 #include "upredalgo.h"
@@ -269,5 +267,3 @@ inline void vector<T>::push_back (const T& v)
 #define typed_alloca_link(m,T,n)	(m).link ((T*) alloca ((n) * sizeof(T)), (n))
 
 } // namespace ustl
-
-#endif

@@ -3,8 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef USTACK_H_5242F5635322B2EC44A9AEE73022C6E9
-#define USTACK_H_5242F5635322B2EC44A9AEE73022C6E9
+#pragma once
 
 namespace ustl {
 
@@ -40,5 +39,3 @@ private:
 };
 
 } // namespace ustl
-
-#endif

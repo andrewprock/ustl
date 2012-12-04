@@ -6,9 +6,7 @@
 /// \file uutility.h
 /// \brief Utility templates.
 
-#ifndef UUTILITY_H_6A58BD296269A82A4AAAA4FD19FDB3AC
-#define UUTILITY_H_6A58BD296269A82A4AAAA4FD19FDB3AC
-
+#pragma once
 #include "utypes.h"
 #include "traits.h"
 #include "ulimits.h"
@@ -440,5 +438,3 @@ namespace simd {
 #endif
 } // namespace simd
 } // namespace ustl
-
-#endif

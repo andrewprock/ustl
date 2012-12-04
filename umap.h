@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UMAP_H_45643F516E02A87A3DCEA5024052A6F5
-#define UMAP_H_45643F516E02A87A3DCEA5024052A6F5
-
+#pragma once
 #include "uvector.h"
 #include "ufunction.h"
 
@@ -177,5 +175,3 @@ inline void map<K,V,Comp>::erase (const_key_ref k)
 }
 
 } // namespace ustl
-
-#endif

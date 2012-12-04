@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef CMEMLINK_H_7CFAB32C5C6732ED29B34EF00EA40A12
-#define CMEMLINK_H_7CFAB32C5C6732ED29B34EF00EA40A12
-
+#pragma once
 #include "ualgobase.h"
 
 /// The ustl namespace contains all ustl classes and algorithms.
@@ -96,5 +94,3 @@ inline void cmemlink::relink (const void* p, size_type n)
 #define static_link(v)	link (VectorBlock(v))
 
 } // namespace ustl
-
-#endif

@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UIOS_H_630C16E316F7650E3A02E1C6611B789A
-#define UIOS_H_630C16E316F7650E3A02E1C6611B789A
-
+#pragma once
 #include "utypes.h"
 
 namespace ustl {
@@ -99,5 +97,3 @@ private:
 };
 
 } // namespace ustl
-
-#endif

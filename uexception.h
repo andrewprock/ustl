@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UEXCEPTION_H_18DE3EF55C4F00673268F0D66546AF5D
-#define UEXCEPTION_H_18DE3EF55C4F00673268F0D66546AF5D
-
+#pragma once
 #include "utypes.h"
 #ifndef WITHOUT_LIBSTDCPP
     #include <exception>
@@ -188,5 +186,3 @@ protected:
 const char* demangle_type_name (char* buf, size_t bufSize, size_t* pdmSize = NULL);
 
 } // namespace ustl
-
-#endif

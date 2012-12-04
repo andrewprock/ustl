@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef USTRING_H_1249CB7A098A9010763AAC6D37B133CF
-#define USTRING_H_1249CB7A098A9010763AAC6D37B133CF
-
+#pragma once
 #include "memblock.h"
 #include "utf8.h"
 #include <stdarg.h>	// for va_list, va_start, and va_end (in string::format)
@@ -263,5 +261,3 @@ inline hashvalue_t hash_value (const char* v)
 //----------------------------------------------------------------------
 
 } // namespace ustl
-
-#endif

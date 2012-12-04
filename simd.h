@@ -14,9 +14,7 @@
 /// must be of a fixed and compile-time-known size for the compiler to be
 /// able to choose the specialization.
 
-#ifndef SIMD_H_39BE2D970DF4BD00508CCFFB482496F9
-#define SIMD_H_39BE2D970DF4BD00508CCFFB482496F9
-
+#pragma once
 #include "ulimits.h"
 #if HAVE_MATH_H
     #include <math.h>
@@ -462,5 +460,3 @@ SSE_IPASSIGN_SPEC(4,uint32_t)
 
 } // namespace simd
 } // namespace ustl
-
-#endif

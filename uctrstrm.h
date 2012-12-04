@@ -10,9 +10,7 @@
 /// Making virtual read/write is also impossible because not all containers
 /// contain serializable elements. Therefore, use the macros in this file.
 
-#ifndef UCTRSTRM_H_75B2C3EA4980DDDC6B6DFFF767A3B7AC
-#define UCTRSTRM_H_75B2C3EA4980DDDC6B6DFFF767A3B7AC
-
+#pragma once
 #include "mistream.h"
 #include "sostream.h"
 #include "uiosfunc.h"
@@ -177,5 +175,3 @@ ostringstream& container_text_write (ostringstream& os, const Container& v)
 //----------------------------------------------------------------------
 
 } // namespace ustl
-
-#endif

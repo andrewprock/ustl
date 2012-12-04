@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef FSTREAM_H_056E10F70EAD416443E3B36A2D6B5FA3
-#define FSTREAM_H_056E10F70EAD416443E3B36A2D6B5FA3
-
+#pragma once
 #include "uios.h"
 #include "ustring.h"
 
@@ -71,5 +69,3 @@ private:
 #define FCNTLID(r)	"fcntl("#r")", r
 
 } // namespace ustl
-
-#endif

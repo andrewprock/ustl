@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UNEW_H_11D237512B324C9C05A55DAF1BF086F1
-#define UNEW_H_11D237512B324C9C05A55DAF1BF086F1
-
+#pragma once
 #include "uexception.h"
 #include <stdlib.h>
 
@@ -43,5 +41,3 @@ inline void  operator delete[](void*, void*) noexcept { }
 #else
 #include <new>
 #endif	// WITHOUT_LIBSTDCPP
-
-#endif

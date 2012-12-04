@@ -3,8 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UCTRALGO_H_0D1AEDFA74B09791489FE25B1EC644B0
-#define UCTRALGO_H_0D1AEDFA74B09791489FE25B1EC644B0
+#pragma once
 
 namespace ustl {
 
@@ -466,5 +465,3 @@ inline void stable_sort (Container& ctr, Compare comp)
 }
 
 } // namespace ustl
-
-#endif

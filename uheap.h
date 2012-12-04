@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UHEAP_H_574B9EAF271A1C107190B4D575A356C5
-#define UHEAP_H_574B9EAF271A1C107190B4D575A356C5
-
+#pragma once
 #include "ualgobase.h"
 
 namespace ustl {
@@ -138,5 +136,3 @@ private:
 };
 
 } // namespace ustl
-
-#endif

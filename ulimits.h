@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef ULIMITS_H_1C2192EA3821E0811BBAF86B0F048364
-#define ULIMITS_H_1C2192EA3821E0811BBAF86B0F048364
-
+#pragma once
 #include "utypes.h"
 
 namespace ustl {
@@ -86,5 +84,3 @@ _NUMERIC_LIMITS (unsigned long long,	0,	ULLONG_MAX,	false,	true,	true);
 namespace ustl { _NUMERIC_LIMITS (type, minVal, maxVal, bSigned, bInteger, bIntegral); }
 
 } // namespace ustl
-
-#endif

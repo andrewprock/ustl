@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef MOSTREAM_H_24A8C5397E0848216573E5670930FC9A
-#define MOSTREAM_H_24A8C5397E0848216573E5670930FC9A
-
+#pragma once
 #include "memlink.h"
 #include "uexception.h"
 #include "utf8.h"
@@ -289,5 +287,3 @@ inline ostream& operator<< (ostream& os, const T& v) {
 //----------------------------------------------------------------------
 
 } // namespace ustl
-
-#endif

@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UMULTISET_H_446AEDBB7F61C6994DC228C25D5FA3A1
-#define UMULTISET_H_446AEDBB7F61C6994DC228C25D5FA3A1
-
+#pragma once
 #include "uvector.h"
 #include "ualgo.h"
 
@@ -89,5 +87,3 @@ void multiset<T,Comp>::erase (const_reference v)
 }
 
 } // namespace ustl
-
-#endif

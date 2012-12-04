@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UMULTIMAP_H_45743F516E02A87A3FCEA5024052A6F5
-#define UMULTIMAP_H_45743F516E02A87A3FCEA5024052A6F5
-
+#pragma once
 #include "uvector.h"
 #include "ufunction.h"
 
@@ -116,5 +114,3 @@ void multimap<K,V,Comp>::insert (const_iterator i1, const_iterator i2)
 }
 
 } // namespace ustl
-
-#endif

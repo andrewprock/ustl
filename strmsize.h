@@ -8,8 +8,7 @@
 /// stream_size_of functions return the size of the object's data that is written or
 /// read from a stream.
 
-#ifndef STRMSIZE_H_052FF16B2D8A608761BF10333D065073
-#define STRMSIZE_H_052FF16B2D8A608761BF10333D065073
+#pragma once
 
 namespace ustl {
 
@@ -92,5 +91,3 @@ namespace ustl {		\
 	    return (os);		\
 	}				\
     }
-
-#endif

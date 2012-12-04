@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UMEMORY_H_4AB5B0DB5BF09140541409CC47BCD17A
-#define UMEMORY_H_4AB5B0DB5BF09140541409CC47BCD17A
-
+#pragma once
 #include "unew.h"
 #if HAVE_ALLOCA_H
     #include <alloca.h>
@@ -191,5 +189,3 @@ ForwardIterator uninitialized_fill_n (ForwardIterator first, size_t n, const T& 
 }
     
 } // namespace ustl
-
-#endif

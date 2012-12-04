@@ -6,9 +6,7 @@
 /// \file uiterator.h
 /// \brief Contains various iterator adapters.
 
-#ifndef UITERATOR_H_5BCA176C7214A30F2069E2614D2DC226
-#define UITERATOR_H_5BCA176C7214A30F2069E2614D2DC226
-
+#pragma once
 #include "utypes.h"
 
 namespace ustl {
@@ -262,5 +260,3 @@ inline typename Container2::iterator ibyi (typename Container1::iterator idx, Co
 //----------------------------------------------------------------------
 
 } // namespace ustl
-
-#endif

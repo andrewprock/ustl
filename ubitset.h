@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UBITSET_H_7B6450EC1400CBA45DCE0127739F82EE
-#define UBITSET_H_7B6450EC1400CBA45DCE0127739F82EE
-
+#pragma once
 #include "ustring.h"
 #include "ufunction.h"
 
@@ -126,5 +124,3 @@ private:
 };
 
 } // namespace ustl
-
-#endif

@@ -14,9 +14,7 @@
 // U-04000000 - U-7FFFFFFF: 1111110x 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
 // U-80000000 - U-FFFFFFFF: 11111110 100000xx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx 10xxxxxx
 
-#ifndef UTF8_H_3D7AEEEB3A88928D4D280B785F78B6F4
-#define UTF8_H_3D7AEEEB3A88928D4D280B785F78B6F4
-
+#pragma once
 #include "uiterator.h"
 
 namespace ustl {
@@ -211,5 +209,3 @@ inline utf8in_iterator<Iterator> utf8in (Iterator i)
 //----------------------------------------------------------------------
 
 } // namespace ustl
-
-#endif

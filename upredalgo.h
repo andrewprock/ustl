@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UPREDALGO_H_2CB058AE0807A01A2F6A51BA5D5820A5
-#define UPREDALGO_H_2CB058AE0807A01A2F6A51BA5D5820A5
-
+#pragma once
 #include "ualgo.h"
 
 namespace ustl {
@@ -585,5 +583,3 @@ inline ForwardIterator partition (ForwardIterator first, ForwardIterator last, P
 }
 
 } // namespace ustl
-
-#endif

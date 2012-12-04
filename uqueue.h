@@ -3,8 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UQUEUE_H_27F01FDB0D59B75277E0E5C41ABC6B5B
-#define UQUEUE_H_27F01FDB0D59B75277E0E5C41ABC6B5B
+#pragma once
 
 namespace ustl {
 
@@ -65,5 +64,3 @@ inline void queue<T>::pop (void)
 }
 
 } // namespace ustl
-
-#endif

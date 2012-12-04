@@ -3,9 +3,7 @@
 // Copyright (c) 2005 Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef MEMBLOCK_H_7ED63A891164CC43578E63664D52A196
-#define MEMBLOCK_H_7ED63A891164CC43578E63664D52A196
-
+#pragma once
 #include "memlink.h"
 
 namespace ustl {
@@ -57,5 +55,3 @@ private:
 };
 
 } // namespace ustl
-
-#endif

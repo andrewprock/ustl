@@ -3,8 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UFUNCTION_H_221ABA8551801799263C927234C085F3
-#define UFUNCTION_H_221ABA8551801799263C927234C085F3
+#pragma once
 
 namespace ustl {
 
@@ -461,5 +460,3 @@ DEREFERENCER_T(const_deref2_t,	const T, 	FUNCTOR_BINARY_BASE(const T*),	DEREF_BI
 #endif
 
 } // namespace ustl
-
-#endif

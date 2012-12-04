@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UALGOBASE_H_683A0BE77546133C4CE0E3622CFAA2EB
-#define UALGOBASE_H_683A0BE77546133C4CE0E3622CFAA2EB
-
+#pragma once
 #include "uutility.h"
 #include <string.h>
 
@@ -317,5 +315,3 @@ FILL_N_ALIAS_FUNC(int32_t, uint32_t, int32_t)
 extern const char _FmtPrtChr[2][8];
 
 } // namespace ustl
-
-#endif

@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef MISTREAM_H_103AEF1F266C04AA1A817D38705983DA
-#define MISTREAM_H_103AEF1F266C04AA1A817D38705983DA
-
+#pragma once
 #include "memlink.h"
 #include "uexception.h"
 #include "strmsize.h"
@@ -320,5 +318,3 @@ inline utf8istream_iterator utf8in (istream& is)
 //----------------------------------------------------------------------
 
 } // namespace ustl
-
-#endif

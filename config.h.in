@@ -1,7 +1,5 @@
 // config.h - Generated from config.h.in by configure.
-
-#ifndef CONFIG_H_01E33670634DAAC779EE5FF41CCBB36F
-#define CONFIG_H_01E33670634DAAC779EE5FF41CCBB36F
+#pragma once
 
 // Define to the one symbol short name of this package.
 #define USTL_NAME	"@PKG_NAME@"
@@ -248,6 +246,4 @@
     #define __sse_align	__attribute__((aligned(16)))
 #else
     #define __sse_align	
-#endif
-
 #endif

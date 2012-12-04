@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UALGO_H_711AB4214D417A51166694D47A662D6E
-#define UALGO_H_711AB4214D417A51166694D47A662D6E
-
+#pragma once
 #include "upair.h"
 #include "ualgobase.h"
 #include "ufunction.h"
@@ -662,5 +660,3 @@ inline RandomAccessIterator partial_sort_copy (InputIterator first, InputIterato
 }
 
 } // namespace ustl
-
-#endif

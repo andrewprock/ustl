@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef SOSTREAM_H_5323DC8C26E181D43278F2F53FDCF19F
-#define SOSTREAM_H_5323DC8C26E181D43278F2F53FDCF19F
-
+#pragma once
 #include "ustring.h"
 #include "mostream.h"
 
@@ -157,5 +155,3 @@ OSTRSTREAM_CAST_OPERATOR (char,			uint8_t)
 //----------------------------------------------------------------------
 
 } // namespace ustl
-
-#endif

@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef UTYPES_H_118BBB3B50B7DBF22F5460C52E515C83
-#define UTYPES_H_118BBB3B50B7DBF22F5460C52E515C83
-
+#pragma once
 #include "config.h"
 #ifndef STDC_HEADERS
     #error "This library requires standard C and C++ headers to compile."
@@ -64,5 +62,4 @@ typedef uoff_t		streamoff;	///< Offset into a stream
 
 #if !defined(UINTPTR_MAX) || !defined(UINT32_C)
     #error "If you include stdint.h before ustl.h, define __STDC_LIMIT_MACROS and __STDC_CONSTANT_MACROS first"
-#endif
 #endif

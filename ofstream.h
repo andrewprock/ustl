@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef FDOSTREAM_H_5E27FC3D530BF3CA04D6C73F5700EECC
-#define FDOSTREAM_H_5E27FC3D530BF3CA04D6C73F5700EECC
-
+#pragma once
 #include "sistream.h"
 #include "sostream.h"
 #include "fstream.h"
@@ -74,5 +72,3 @@ extern ofstream cout, cerr;
 extern ifstream cin;
 
 } // namespace ustl
-
-#endif

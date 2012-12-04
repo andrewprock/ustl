@@ -3,9 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#ifndef ULAALGO_H_2E403D182E83FB596AFB800E68B255A1
-#define ULAALGO_H_2E403D182E83FB596AFB800E68B255A1
-
+#pragma once
 #include "umatrix.h"
 #include "simd.h"
 
@@ -216,5 +214,3 @@ template <> inline tuple<4,float> operator* (const tuple<4,float>& t, const matr
 #endif	// WANT_UNROLLED_COPY
 
 } // namespace ustl
-
-#endif
