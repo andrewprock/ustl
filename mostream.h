@@ -8,6 +8,7 @@
 #include "uexception.h"
 #include "utf8.h"
 #include "uios.h"
+#include "strmsize.h"
 #if WANT_STREAM_BOUNDS_CHECKING
     #include "typeinfo.h"
 #endif

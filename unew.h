@@ -25,18 +25,18 @@ inline void nfree (void* p) noexcept { if (p) free (p); }
 //  Placement new and delete signatures (take a memory address argument,
 //  does nothing) may not be replaced by a user's program.
 //
-inline void* operator new (size_t n) throw (ustl::bad_alloc)	{ return (tmalloc (n)); }
-inline void* operator new[] (size_t n) throw (ustl::bad_alloc)	{ return (tmalloc (n)); }
-inline void  operator delete (void* p) noexcept			{ nfree (p); }
-inline void  operator delete[] (void* p) noexcept		{ nfree (p); }
+inline void* operator new (size_t n) throw (std::bad_alloc)	{ return (tmalloc (n)); }
+inline void* operator new[] (size_t n) throw (std::bad_alloc)	{ return (tmalloc (n)); }
+inline void  operator delete (void* p)				{ nfree (p); }
+inline void  operator delete[] (void* p)			{ nfree (p); }
 
 // Default placement versions of operator new.
-inline void* operator new (size_t, void* p) noexcept { return (p); }
-inline void* operator new[] (size_t, void* p) noexcept { return (p); }
+inline void* operator new (size_t, void* p) noexcept	{ return (p); }
+inline void* operator new[] (size_t, void* p) noexcept	{ return (p); }
 
 // Default placement versions of operator delete.
-inline void  operator delete  (void*, void*) noexcept { }
-inline void  operator delete[](void*, void*) noexcept { }
+inline void  operator delete  (void*, void*) noexcept	{ }
+inline void  operator delete[](void*, void*) noexcept	{ }
 
 #else
 #include <new>

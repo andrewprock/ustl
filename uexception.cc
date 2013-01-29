@@ -61,31 +61,35 @@ void exception::text_write (ostringstream& os) const
 }
 
 //----------------------------------------------------------------------
+#if WITHOUT_LIBSTDCPP
+} // namespace ustl
+namespace std {
+#endif
 
 /// Initializes the empty object. \p nBytes is the size of the attempted allocation.
 bad_alloc::bad_alloc (size_t nBytes) noexcept
 : ustl::exception(),
   m_nBytesRequested (nBytes)
 {
-    set_format (xfmt_BadAlloc);
+    set_format (ustl::xfmt_BadAlloc);
 }
 
 /// Returns a descriptive error message. fmt="failed to allocate %d bytes"
-void bad_alloc::info (string& msgbuf, const char* fmt) const noexcept
+void bad_alloc::info (ustl::string& msgbuf, const char* fmt) const noexcept
 {
     if (!fmt) fmt = "failed to allocate %d bytes";
     try { msgbuf.format (fmt, m_nBytesRequested); } catch (...) {}
 }
 
 /// Reads the exception from stream \p is.
-void bad_alloc::read (istream& is)
+void bad_alloc::read (ustl::istream& is)
 {
     ustl::exception::read (is);
     is >> m_nBytesRequested;
 }
 
 /// Writes the exception into stream \p os.
-void bad_alloc::write (ostream& os) const
+void bad_alloc::write (ustl::ostream& os) const
 {
     ustl::exception::write (os);
     os << m_nBytesRequested;
@@ -94,9 +98,13 @@ void bad_alloc::write (ostream& os) const
 /// Returns the size of the written exception.
 size_t bad_alloc::stream_size (void) const
 {
-    return (ustl::exception::stream_size() + stream_size_of(m_nBytesRequested));
+    return (ustl::exception::stream_size() + ustl::stream_size_of(m_nBytesRequested));
 }
 
+#if WITHOUT_LIBSTDCPP
+} // namespace std
+namespace ustl {
+#endif
 //----------------------------------------------------------------------
 
 /// Initializes the empty object. \p operation is the function that returned the error code.

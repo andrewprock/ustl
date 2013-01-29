@@ -104,20 +104,29 @@ public:
 /// \brief Exception thrown on memory allocation failure by memblock::reserve.
 ///
 #if WITHOUT_LIBSTDCPP
-class bad_alloc : public exception {
+} // namespace ustl
+namespace std {
+class bad_alloc : public ::ustl::exception {
 #else
+
 class bad_alloc : public std::bad_alloc, public exception {
 #endif
 public:
     explicit		bad_alloc (size_t nBytes = 0) noexcept;
     inline virtual const char*	what (void) const noexcept { return ("memory allocation failed"); }
-    virtual void	info (string& msgbuf, const char* fmt = NULL) const noexcept;
-    virtual void	read (istream& is);
-    virtual void	write (ostream& os) const;
+    virtual void	info (ustl::string& msgbuf, const char* fmt = NULL) const noexcept;
+    virtual void	read (ustl::istream& is);
+    virtual void	write (ustl::ostream& os) const;
     virtual size_t	stream_size (void) const;
 protected:
     size_t		m_nBytesRequested;	///< Number of bytes requested by the failed allocation.
 };
+
+#if WITHOUT_LIBSTDCPP
+} // namespace std
+namespace ustl {
+typedef std::bad_alloc bad_alloc;
+#endif
 
 /// \class libc_exception uexception.h ustl.h
 /// \ingroup Exceptions
