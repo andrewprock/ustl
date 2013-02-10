@@ -3,14 +3,17 @@
 bvt/SRCS	:= $(wildcard bvt/bvt*.cc)
 bvt/BVTS	:= $(bvt/SRCS:.cc=)
 bvt/OBJS	:= $(addprefix $O,$(bvt/SRCS:.cc=.o))
+ifdef BUILD_STATIC
+bvt/LIBS	:= ${LIBA}
+else
 bvt/LIBS	:= -L$(abspath $O.) -l${NAME}
+endif
 ifdef BUILD_SHARED
 bvt/LIBS	:= -Wl,--rpath=$(abspath $O.) ${bvt/LIBS}
 endif
 ifdef NOLIBSTDCPP
 bvt/LIBS	+= ${STAL_LIBS} -lm
 endif
-CXXFLAGS	+= -I.
 
 ################ Compilation ###########################################
 
