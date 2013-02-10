@@ -88,7 +88,7 @@ void memblock::reserve (size_type newSize, bool bExact)
     if ((newSize += minimumFreeCapacity()) <= m_Capacity)
 	return;
     pointer oldBlock (is_linked() ? NULL : data());
-    const size_t alignedSize (Align (newSize, 64));
+    const size_t alignedSize (NextPow2 (newSize));
     if (!bExact)
 	newSize = alignedSize;
     pointer newBlock = (pointer) realloc (oldBlock, newSize);
@@ -98,6 +98,17 @@ void memblock::reserve (size_type newSize, bool bExact)
 	copy_n (cdata(), min (size() + 1, newSize), newBlock);
     link (newBlock, size());
     m_Capacity = newSize;
+}
+
+/// Reduces capacity to match size
+void memblock::shrink_to_fit (void)
+{
+    if (is_linked())
+	return;
+    pointer newBlock = (pointer) realloc (begin(), size());
+    if (!newBlock)
+	throw bad_alloc (size());
+    m_Capacity = size();
 }
 
 /// Shifts the data in the linked block from \p start to \p start + \p n.

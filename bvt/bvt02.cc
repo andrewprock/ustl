@@ -67,6 +67,9 @@ void TestMB (void)
     WriteCML (a);
     a.resize (strTestLen + strTestLen / 2);
     WriteCML (a);
+    cout << "Capacity " << a.capacity();
+    a.shrink_to_fit();
+    cout << ", shrunk " << a.capacity() << endl;
 }
 
 StdBvtMain (TestMB)

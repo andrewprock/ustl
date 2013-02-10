@@ -47,7 +47,7 @@ public:
     inline			operator cmemlink (void) const	{ return (cmemlink (m_Data)); }
     inline			operator cmemlink (void)	{ return (cmemlink (m_Data)); }
     inline			operator memlink (void)		{ return (memlink (m_Data)); }
-    inline void			reserve (size_type n, bool bExact = true);
+    inline void			reserve (size_type n, bool bExact = false);
     inline void			resize (size_type n, bool bExact = true);
     inline size_type		capacity (void) const		{ return (m_Data.capacity() / sizeof(T));	}
     inline size_type		size (void) const		{ return (m_Data.size() / sizeof(T));		}
@@ -57,10 +57,14 @@ public:
     inline const_iterator	begin (void) const		{ return (const_iterator (m_Data.begin()));	}
     inline iterator		end (void)			{ return (iterator (m_Data.end()));		}
     inline const_iterator	end (void) const		{ return (const_iterator (m_Data.end()));	}
-    inline reverse_iterator		rbegin (void)		{ return (reverse_iterator (end()));		}
-    inline const_reverse_iterator	rbegin (void) const	{ return (const_reverse_iterator (end()));	}
-    inline reverse_iterator		rend (void)		{ return (reverse_iterator (begin()));		}
-    inline const_reverse_iterator	rend (void) const	{ return (const_reverse_iterator (begin()));	}
+    inline const_iterator	cbegin (void) const		{ return (begin()); }
+    inline const_iterator	cend (void) const		{ return (end()); }
+    inline reverse_iterator	rbegin (void)			{ return (reverse_iterator (end()));		}
+  inline const_reverse_iterator	rbegin (void) const		{ return (const_reverse_iterator (end()));	}
+    inline reverse_iterator	rend (void)			{ return (reverse_iterator (begin()));		}
+  inline const_reverse_iterator	rend (void) const		{ return (const_reverse_iterator (begin()));	}
+  inline const_reverse_iterator	crbegin (void) const		{ return (rbegin()); }
+  inline const_reverse_iterator	crend (void) const		{ return (rend()); }
     inline iterator		iat (size_type i)		{ assert (i <= size()); return (begin() + i); }
     inline const_iterator	iat (size_type i) const		{ assert (i <= size()); return (begin() + i); }
     inline reference		at (size_type i)		{ assert (i < size()); return (begin()[i]); }
@@ -74,6 +78,7 @@ public:
     inline void			push_back (const T& v = T());
     inline void			pop_back (void)			{ m_Data.memlink::resize (m_Data.size() - sizeof(T)); }
     inline void			clear (void)			{ m_Data.clear(); }
+    inline void			shrink_to_fit (void)		{ m_Data.shrink_to_fit(); }
     inline void			deallocate (void) noexcept;
     inline void			assign (const_iterator i1, const_iterator i2);
     inline void			assign (size_type n, const T& v);
