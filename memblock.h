@@ -36,8 +36,8 @@ public:
     void			assign (const void* p, size_type n);
     void			reserve (size_type newSize, bool bExact = false);
     void			resize (size_type newSize, bool bExact = true);
-    iterator			insert (iterator start, size_type size);
-    iterator			erase (iterator start, size_type size);
+    iterator			insert (const_iterator start, size_type size);
+    iterator			erase (const_iterator start, size_type size);
     inline void			clear (void)			{ resize (0); }
     inline size_type		capacity (void) const		{ return (m_Capacity); }
     inline bool			is_linked (void) const		{ return (!capacity()); }
@@ -49,6 +49,11 @@ public:
     void			copy_link (void);
     void			read (istream& is);
     void			read_file (const char* filename);
+#if HAVE_CPP11
+    inline			memblock (memblock&& b)		: memlink(), m_Capacity(0) { swap (b); }
+    inline memblock&		operator= (memblock&& b)	{ swap (b); return (*this); }
+    inline void			swap (memblock&& l)		{ memlink::swap (l); ::ustl::swap (m_Capacity, l.m_Capacity); }
+#endif
 protected:
     virtual size_type		minimumFreeCapacity (void) const noexcept __attribute__((const));
 private:

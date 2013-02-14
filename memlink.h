@@ -44,7 +44,8 @@ public:
     inline		memlink (const void* p, size_type n)	: cmemlink (p, n) {}
     inline		memlink (rcself_t l)			: cmemlink (l) {}
     inline explicit	memlink (const cmemlink& l)		: cmemlink (l) {}
-    inline pointer	data (void)				{ return (const_cast<pointer>(cdata())); }
+    inline pointer	data (void)				{ return (const_cast<pointer>(cmemlink::data())); }
+   inline const_pointer	data (void) const			{ return (cmemlink::data()); }
     inline iterator	begin (void)				{ return (iterator (data())); }
     inline iterator	iat (size_type i)			{ assert (i <= size()); return (begin() + i); }
     inline iterator	end (void)				{ return (iat (size())); }
@@ -63,29 +64,31 @@ public:
     inline void		relink (const void* p, size_type n)	{ cmemlink::relink (p, n); }
     inline void		relink (void* p, size_type n)		{ cmemlink::relink (p, n); }
     inline void		swap (memlink& l)			{ cmemlink::swap (l); }
-    void		fill (iterator start, const void* p, size_type elsize, size_type elCount = 1);
-    inline void		insert (iterator start, size_type size);
-    inline void		erase (iterator start, size_type size);
+    void		fill (const_iterator start, const void* p, size_type elsize, size_type elCount = 1);
+    inline void		insert (const_iterator start, size_type size);
+    inline void		erase (const_iterator start, size_type size);
     void		read (istream& is);
 };
 
 /// Shifts the data in the linked block from \p start to \p start + \p n.
 /// The contents of the uncovered bytes is undefined.
-inline void memlink::insert (iterator start, size_type n)
+inline void memlink::insert (const_iterator cstart, size_type n)
 {
     assert (data() || !n);
     assert (cmemlink::begin() || !n);
-    assert (start >= begin() && start + n <= end());
+    assert (cstart >= begin() && cstart + n <= end());
+    iterator start = const_cast<iterator>(cstart);
     rotate (start, end() - n, end());
 }
 
 /// Shifts the data in the linked block from \p start + \p n to \p start.
 /// The contents of the uncovered bytes is undefined.
-inline void memlink::erase (iterator start, size_type n)
+inline void memlink::erase (const_iterator cstart, size_type n)
 {
     assert (data() || !n);
     assert (cmemlink::begin() || !n);
-    assert (start >= begin() && start + n <= end());
+    assert (cstart >= begin() && cstart + n <= end());
+    iterator start = const_cast<iterator>(cstart);
     rotate (start, start + n, end());
 }
 

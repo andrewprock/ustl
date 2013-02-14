@@ -5,7 +5,6 @@
 
 #pragma once
 #include "upair.h"
-#include "ualgobase.h"
 #include "ufunction.h"
 #include "umemory.h"
 #include <stdlib.h>	// for rand()

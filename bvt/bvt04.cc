@@ -9,6 +9,8 @@ class A {
 public:
     A (void)
     { cout << "A::A\n"; }
+    A (int a)
+    { cout << "A::A(" << a << ")\n"; }
     A (const A&)
     { cout << "Copy A::A\n"; }
     const A& operator= (const A&)
@@ -63,6 +65,18 @@ void TestVector (void)
     ctv.assign (3, a);
     ctv.pop_back();
     cout << "Class insertion testing successful\n";
+#if HAVE_CPP11
+    v = vector<int>(vector<int>({1,2,3,4,5,6,7,8}));
+    v.insert (v.begin()+3, {11,12,13});
+    v.emplace (v.begin()+7, 22);
+    cout << '{';
+    for (auto i : v)
+	cout << ' ' << i;
+    cout << " }" << endl;
+    ctv.emplace_back (15);
+#else
+    cout << "{ 1 2 3 11 12 13 4 22 5 6 7 8 }\nA::A(15)\nA::~A\n";
+#endif
 }
 
 StdBvtMain (TestVector)

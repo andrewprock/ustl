@@ -18,7 +18,10 @@ A::A
 A::operator=
 A::operator=
 A::operator=
+A::~A
 Class insertion testing successful
+{ 1 2 3 11 12 13 4 22 5 6 7 8 }
+A::A(15)
 A::~A
 A::~A
 A::~A

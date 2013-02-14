@@ -13,13 +13,13 @@ namespace ustl {
 
 //----------------------------------------------------------------------
 
-const uoff_t string::npos;
+const string::size_type string::npos;
 
 //----------------------------------------------------------------------
 
 /// Assigns itself the value of string \p s
 string::string (const string& s)
-: memblock ((s.size()+1) & (s.is_linked()-1))	// Allocate with terminator if not linked (can't call virtuals from base ctor)
+: memblock ((s.size()+1) & (s.is_linked()-1))	// +1 because base ctor can't call virtuals of this class
 {
     if (s.is_linked())
 	relink (s.c_str(), s.size());
@@ -39,7 +39,7 @@ string::string (const_pointer s)
 
 /// Creates a string of length \p n filled with character \p c.
 string::string (size_type n, value_type c)
-: memblock (n+1)	// because base ctor can't call virtuals of this class
+: memblock (n+1)	// +1 because base ctor can't call virtuals of this class
 {
     relink (begin(), size()-1);	// --m_Size
     fill_n (begin(), n, c);
@@ -56,38 +56,43 @@ void string::resize (size_type n)
 }
 
 /// Assigns itself the value of string \p s
-void string::assign (const_pointer s)
+string& string::assign (const_pointer s)
 {
     if (!s) s = "";
     assign (s, strlen (s));
+    return (*this);
 }
 
 /// Assigns itself the value of string \p s of length \p len.
-void string::assign (const_pointer s, size_type len)
+string& string::assign (const_pointer s, size_type len)
 {
     resize (len);
     copy_n (s, len, begin());
+    return (*this);
 }
 
 /// Appends to itself the value of string \p s of length \p len.
-void string::append (const_pointer s)
+string& string::append (const_pointer s)
 {
     if (!s) s = "";
     append (s, strlen (s));
+    return (*this);
 }
 
 /// Appends to itself the value of string \p s of length \p len.
-void string::append (const_pointer s, size_type len)
+string& string::append (const_pointer s, size_type len)
 {
     resize (size() + len);
     copy_n (s, len, end() - len);
+    return (*this);
 }
 
 /// Appends to itself \p n characters of value \p c.
-void string::append (size_type n, value_type c)
+string& string::append (size_type n, value_type c)
 {
     resize (size() + n);
     fill_n (end() - n, n, c);
+    return (*this);
 }
 
 /// Copies into itself at offset \p start, the value of string \p p of length \p n.
@@ -125,7 +130,7 @@ bool string::operator== (const_pointer s) const
 }
 
 /// Returns the beginning of character \p i.
-string::const_iterator string::wiat (uoff_t i) const
+string::const_iterator string::wiat (size_type i) const
 {
     utf8in_iterator<string::const_iterator> cfinder (begin());
     cfinder += i;
@@ -139,109 +144,115 @@ string::const_iterator string::wiat (uoff_t i) const
 /// able to know the character position in a localized string; different
 /// languages will have different character counts, so use find instead.
 ///
-void string::insert (const uoff_t ipo, wchar_t c, size_type n)
+string& string::insert (size_type ipo, wchar_t c, size_type n)
 {
     iterator ip (iat(ipo));
     ip = iterator (memblock::insert (memblock::iterator(ip), n * Utf8Bytes(c)));
     fill_n (utf8out (ip), n, c);
     *end() = 0;
+    return (*this);
 }
 
 /// Inserts sequence of wide characters at \p ipo (byte position from a find call)
-void string::insert (const uoff_t ipo, const wchar_t* first, const wchar_t* last, const size_type n)
+string& string::insert (size_type ipo, const wchar_t* first, const wchar_t* last, const size_type n)
 {
     iterator ip (iat(ipo));
     size_type nti = distance (first, last), bti = 0;
-    for (uoff_t i = 0; i < nti; ++ i)
+    for (size_type i = 0; i < nti; ++ i)
 	bti += Utf8Bytes(first[i]);
     ip = iterator (memblock::insert (memblock::iterator(ip), n * bti));
     utf8out_iterator<string::iterator> uout (utf8out (ip));
-    for (uoff_t j = 0; j < n; ++ j)
-	for (uoff_t k = 0; k < nti; ++ k, ++ uout)
+    for (size_type j = 0; j < n; ++ j)
+	for (size_type k = 0; k < nti; ++ k, ++ uout)
 	    *uout = first[k];
     *end() = 0;
+    return (*this);
 }
 
 /// Inserts character \p c into this string at \p start.
-string::iterator string::insert (iterator start, const_reference c, size_type n)
+string::iterator string::insert (const_iterator start, value_type c, size_type n)
 {
-    start = iterator (memblock::insert (memblock::iterator(start), n));
-    fill_n (start, n, c);
+    memblock::iterator ip = memblock::insert (memblock::const_iterator(start), n);
+    fill_n (ip, n, c);
     *end() = 0;
-    return (start);
+    return (iterator(ip));
 }
 
 /// Inserts \p count instances of string \p s at offset \p start.
-string::iterator string::insert (iterator start, const_pointer s, size_type n)
+string::iterator string::insert (const_iterator start, const_pointer s, size_type n)
 {
     if (!s) s = "";
     return (insert (start, s, s + strlen(s), n));
 }
 
 /// Inserts [first,last] \p n times.
-string::iterator string::insert (iterator start, const_pointer first, const_pointer last, size_type n)
+string::iterator string::insert (const_iterator start, const_pointer first, const_pointer last, size_type n)
 {
     assert (first <= last);
     assert (begin() <= start && end() >= start);
     assert ((first < begin() || first >= end() || size() + abs_distance(first,last) < capacity()) && "Insertion of self with autoresize is not supported");
-    start = iterator (memblock::insert (memblock::iterator(start), distance(first, last) * n));
-    fill (memblock::iterator(start), first, distance(first, last), n);
+    memblock::iterator ip = iterator (memblock::insert (memblock::const_iterator(start), distance(first, last) * n));
+    fill (ip, first, distance(first, last), n);
     *end() = 0;
-    return (start);
+    return (iterator(ip));
 }
 
 /// Erases \p size bytes at \p ep.
-string::iterator string::erase (iterator ep, size_type n)
+string::iterator string::erase (const_iterator ep, size_type n)
 {
-    string::iterator rv = memblock::erase (memblock::iterator(ep), n);
+    string::iterator rv = memblock::erase (memblock::const_iterator(ep), n);
     *end() = 0;
     return (rv);
 }
 
 /// Erases \p n bytes at byte offset \p epo.
-void string::erase (uoff_t epo, size_type n)
+string& string::erase (size_type epo, size_type n)
 {
     erase (iat(epo), n);
+    return (*this);
 }
 
 /// Replaces range [\p start, \p start + \p len] with string \p s.
-void string::replace (iterator first, iterator last, const_pointer s)
+string& string::replace (const_iterator first, const_iterator last, const_pointer s)
 {
     if (!s) s = "";
     replace (first, last, s, s + strlen(s));
+    return (*this);
 }
 
 /// Replaces range [\p start, \p start + \p len] with \p count instances of string \p s.
-void string::replace (iterator first, iterator last, const_pointer i1, const_pointer i2, size_type n)
+string& string::replace (const_iterator first, const_iterator last, const_pointer i1, const_pointer i2, size_type n)
 {
     assert (first <= last);
     assert (n || distance(first, last));
     assert (first >= begin() && first <= end() && last >= first && last <= end());
     assert ((i1 < begin() || i1 >= end() || abs_distance(i1,i2) * n + size() < capacity()) && "Replacement by self can not autoresize");
     const size_type bte = distance(first, last), bti = distance(i1, i2) * n;
+    memblock::const_iterator rp = static_cast<memblock::const_iterator>(first);
     if (bti < bte)
-	first = iterator (memblock::erase (memblock::iterator(first), bte - bti));
+	rp = memblock::erase (rp, bte - bti);
     else if (bte < bti)
-	first = iterator (memblock::insert (memblock::iterator(first), bti - bte));
-    fill (memblock::iterator(first), i1, distance(i1, i2), n);
+	rp = memblock::insert (rp, bti - bte);
+    fill (rp, i1, distance(i1, i2), n);
     *end() = 0;
+    return (*this);
 }
 
 /// Returns the offset of the first occurence of \p c after \p pos.
-uoff_t string::find (const_reference c, uoff_t pos) const
+string::size_type string::find (value_type c, size_type pos) const
 {
     const_iterator found = ::ustl::find (iat(pos), end(), c);
-    return (found < end() ? (uoff_t) distance(begin(),found) : npos);
+    return (found < end() ? (size_type) distance(begin(),found) : npos);
 }
 
 /// Returns the offset of the first occurence of substring \p s of length \p n after \p pos.
-uoff_t string::find (const string& s, uoff_t pos) const
+string::size_type string::find (const string& s, size_type pos) const
 {
     if (s.empty() || s.size() > size() - pos)
 	return (npos);
-    const uoff_t endi = s.size() - 1;
-    const_reference endchar = s[endi];
-    uoff_t lastPos = endi;
+    size_type endi = s.size() - 1;
+    value_type endchar = s[endi];
+    size_type lastPos = endi;
     while (lastPos-- && s[lastPos] != endchar) ;
     const size_type skip = endi - lastPos;
     const_iterator i = iat(pos) + endi;
@@ -252,7 +263,7 @@ uoff_t string::find (const string& s, uoff_t pos) const
 }
 
 /// Returns the offset of the last occurence of character \p c before \p pos.
-uoff_t string::rfind (const_reference c, uoff_t pos) const
+string::size_type string::rfind (value_type c, size_type pos) const
 {
     for (int i = min(pos,size()-1); i >= 0; --i)
 	if (at(i) == c)
@@ -261,7 +272,7 @@ uoff_t string::rfind (const_reference c, uoff_t pos) const
 }
 
 /// Returns the offset of the last occurence of substring \p s of size \p n before \p pos.
-uoff_t string::rfind (const string& s, uoff_t pos) const
+string::size_type string::rfind (const string& s, size_type pos) const
 {
     const_iterator d = iat(pos) - 1;
     const_iterator sp = begin() + s.size() - 1;
@@ -270,29 +281,29 @@ uoff_t string::rfind (const string& s, uoff_t pos) const
 	for (i = 0; size_type(i) < s.size(); ++ i)
 	    if (m[-i] != d[-i])
 		break;
-    return (d > sp ? (uoff_t) distance (begin(), d + 2 - s.size()) : npos);
+    return (d > sp ? (size_type) distance (begin(), d + 2 - s.size()) : npos);
 }
 
 /// Returns the offset of the first occurence of one of characters in \p s of size \p n after \p pos.
-uoff_t string::find_first_of (const string& s, uoff_t pos) const
+string::size_type string::find_first_of (const string& s, size_type pos) const
 {
-    for (uoff_t i = min(pos,size()); i < size(); ++ i)
+    for (size_type i = min(pos,size()); i < size(); ++ i)
 	if (s.find (at(i)) != npos)
 	    return (i);
     return (npos);
 }
 
 /// Returns the offset of the first occurence of one of characters not in \p s of size \p n after \p pos.
-uoff_t string::find_first_not_of (const string& s, uoff_t pos) const
+string::size_type string::find_first_not_of (const string& s, size_type pos) const
 {
-    for (uoff_t i = min(pos,size()); i < size(); ++ i)
+    for (size_type i = min(pos,size()); i < size(); ++ i)
 	if (s.find (at(i)) == npos)
 	    return (i);
     return (npos);
 }
 
 /// Returns the offset of the last occurence of one of characters in \p s of size \p n before \p pos.
-uoff_t string::find_last_of (const string& s, uoff_t pos) const
+string::size_type string::find_last_of (const string& s, size_type pos) const
 {
     for (int i = min(pos,size()-1); i >= 0; -- i)
 	if (s.find (at(i)) != npos)
@@ -301,7 +312,7 @@ uoff_t string::find_last_of (const string& s, uoff_t pos) const
 }
 
 /// Returns the offset of the last occurence of one of characters not in \p s of size \p n before \p pos.
-uoff_t string::find_last_not_of (const string& s, uoff_t pos) const
+string::size_type string::find_last_not_of (const string& s, size_type pos) const
 {
     for (int i = min(pos,size()-1); i >= 0; -- i)
 	if (s.find (at(i)) == npos)

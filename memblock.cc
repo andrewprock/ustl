@@ -112,7 +112,7 @@ void memblock::shrink_to_fit (void)
 }
 
 /// Shifts the data in the linked block from \p start to \p start + \p n.
-memblock::iterator memblock::insert (iterator start, size_type n)
+memblock::iterator memblock::insert (const_iterator start, size_type n)
 {
     const uoff_t ip = start - begin();
     assert (ip <= size());
@@ -122,7 +122,7 @@ memblock::iterator memblock::insert (iterator start, size_type n)
 }
 
 /// Shifts the data in the linked block from \p start + \p n to \p start.
-memblock::iterator memblock::erase (iterator start, size_type n)
+memblock::iterator memblock::erase (const_iterator start, size_type n)
 {
     const uoff_t ep = start - begin();
     assert (ep + n <= size());

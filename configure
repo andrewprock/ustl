@@ -62,7 +62,7 @@ stdlib.h string.h time.h unistd.h math.h stdlib.h sys/mman.h";
 LIBS="supc++ gcc_eh SystemStubs"
 
 # First pair is used if nothing matches
-PROGS="CC=gcc CC=cc CXX=g++ CXX=c++ DOXYGEN=doxygen LD=ld AR=ar RANLIB=ranlib RANLIB=touch INSTALL=install"
+PROGS="CC=gcc CC=clang CC=cc CXX=g++ CXX=clang++ CXX=c++ DOXYGEN=doxygen LD=ld AR=ar RANLIB=ranlib RANLIB=touch INSTALL=install"
 
 # Environment variables
 ENVIRONS="CXXFLAGS LDFLAGS"
@@ -231,7 +231,7 @@ int main (void)
 	    printf (SET(CPU_HAS_%s,1), s_CpuCaps[i].name);
 #if __GNUC__ >= 3
     printf ("s/ \\?@PROCESSOR_OPTS@/");
-    #if __clang_major__ >= 3 || __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
+    #if (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 2)) || (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
 	printf (" -std=c++11 -march=native");
     #else
 	if (caps & (1<<23))		printf (" -mmmx");

@@ -38,10 +38,21 @@ public:
     inline const_reference	front (void) const		{ return (*begin()); }
     inline reference		front (void)			{ return (*begin()); }
     inline void			remove (const T& v)		{ ::ustl::remove (*this, v); }
+    template <typename Predicate>
+    inline void			remove_if (Predicate p)		{ ::ustl::remove_if (*this, p); }
+    inline void			reverse (void)			{ ::ustl::reverse (*this); }
     inline void			unique (void)			{ ::ustl::unique (*this); }
     inline void			sort (void)			{ ::ustl::sort (*this); }
     void			merge (list<T>& l);
     void			splice (iterator ip, list<T>& l, iterator first = NULL, iterator last = NULL);
+#if HAVE_CPP11
+    inline			list (list&& v)			: vector<T> (forward<list>(v)) {}
+    inline			list (std::initializer_list<T> v) : vector<T> (forward<T>(v)) {}
+    inline list&		operator= (list&& v)		{ vector<T>::operator= (forward<list>(v)); return (*this); }
+    template <typename... Args>
+    inline void			emplace_front (Args&&... args)	{ vector<T>::emplace (begin(), forward<Args>(args)...); }
+    inline void			push_front (T&& v)		{ emplace_front (forward<T>(v)); }
+#endif
 };
 
 /// Merges the contents with \p l. Assumes both lists are sorted.

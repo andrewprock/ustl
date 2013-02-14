@@ -9,6 +9,22 @@
 
 namespace ustl {
 
+#if HAVE_CPP11
+
+template <typename T>
+inline constexpr typename tm::RemoveReference<T>::Result&& move (T&& v) noexcept
+    { return (static_cast<typename tm::RemoveReference<T>::Result&&>(v)); }
+
+template <typename T>
+inline constexpr T&& forward (typename tm::RemoveReference<T>::Result& v) noexcept
+    { return (static_cast<T&&>(v)); }
+
+template <typename T>
+inline constexpr T&& forward (typename tm::RemoveReference<T>::Result&& v) noexcept
+    { return (static_cast<T&&>(v)); }
+
+#endif
+
 /// Assigns the contents of a to b and the contents of b to a.
 /// This is used as a primitive operation by many other algorithms. 
 /// \ingroup SwapAlgorithms

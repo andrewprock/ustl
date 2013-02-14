@@ -14,7 +14,7 @@
 
 namespace ustl {
 
-#ifdef __GNUC__
+#if __GNUC__
     /// Returns the number of elements in a static vector
     #define VectorSize(v)	(sizeof(v) / sizeof(*v))
 #else
@@ -23,19 +23,20 @@ namespace ustl {
     #define VectorSize(v)	(sizeof(v) / ustl::size_of_elements(1, v))
 #endif
 
-/// Expands into a ptr,size expression for the given static vector; useful as link arguments.
-#define VectorBlock(v)	(v)+0, VectorSize(v)	// +0 makes it work under gcc 2.95
-/// Expands into a begin,end expression for the given static vector; useful for algorithm arguments.
-#define VectorRange(v)	VectorBlock(v)+(v)
+/// Returns the end() for a static vector
+template <typename T, size_t N> inline constexpr T* VectorEnd (T(&a)[N]) { return (&a[N]); }
+template <typename T> inline constexpr T* VectorEnd (T(&a)[0]) { return (a); }
 
-/// Indexes into a static array with bounds limit
-#define VectorElement(v,i)	v[min(uoff_t(i),uoff_t(VectorSize(v)-1))]
+/// Expands into a ptr,size expression for the given static vector; useful as link arguments.
+#define VectorBlock(v)	&(v)[0], VectorSize(v)
+/// Expands into a begin,end expression for the given static vector; useful for algorithm arguments.
+#define VectorRange(v)	&(v)[0], VectorEnd(v)
 
 /// Returns the number of bits in the given type
 #define BitsInType(t)	(sizeof(t) * CHAR_BIT)
 
 /// Returns the mask of type \p t with the lowest \p n bits set.
-#define BitMask(t,n)	(t(~t(0)) >> ((sizeof(t) * CHAR_BIT) - (n)))
+#define BitMask(t,n)	(t(~t(0)) >> (BitsInType(t) - (n)))
 
 /// Argument that is used only in debug builds (as in an assert)
 #ifndef NDEBUG
@@ -65,47 +66,51 @@ namespace ustl {
 
 /// Returns the minimum of \p a and \p b
 template <typename T1, typename T2>
-inline T1 min (const T1& a, const T2& b)
+inline constexpr T1 min (const T1& a, const T2& b)
 {
     return (a < b ? a : b);
 }
 
 /// Returns the maximum of \p a and \p b
 template <typename T1, typename T2>
-inline T1 max (const T1& a, const T2& b)
+inline constexpr T1 max (const T1& a, const T2& b)
 {
     return (b < a ? a : b);
 }
+
+/// Indexes into a static array with bounds limit
+template <typename T, size_t N>
+inline constexpr T& VectorElement (T(&v)[N], size_t i) { return (v[min(i,N-1)]); }
 
 /// The alignment performed by default.
 const size_t c_DefaultAlignment = __alignof__(void*);
 
 /// \brief Rounds \p n up to be divisible by \p grain
 template <typename T>
-inline T Align (T n, size_t grain = c_DefaultAlignment)
-{
-    n += grain - 1;
-    return (n - n % grain);
-}
+inline constexpr T AlignDown (T n, size_t grain = c_DefaultAlignment)
+    { return (n - n % grain); }
+
+/// \brief Rounds \p n up to be divisible by \p grain
+template <typename T>
+inline constexpr T Align (T n, size_t grain = c_DefaultAlignment)
+    { return (AlignDown (n + grain - 1, grain)); }
 
 /// Returns a NULL pointer cast to T.
 template <typename T>
-inline T* NullPointer (void)
+inline constexpr T* NullPointer (void)
     { return ((T*) NULL); }
 
 /// \brief Returns a non-dereferentiable value reference.
 /// This is useful for passing to stream_align_of or the like which need a value but
 /// don't need to actually use it.
 template <typename T>
-inline T& NullValue (void)
+inline constexpr T& NullValue (void)
     { return (*NullPointer<T>()); }
 
 /// Offsets an iterator
 template <typename T>
 inline T advance (T i, ssize_t offset)
-{
-    return (i + offset);
-}
+    { return (i + offset); }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 /// Offsets a void pointer
@@ -127,14 +132,14 @@ inline void* advance (void* p, ssize_t offset)
 
 /// Returns the difference \p p1 - \p p2
 template <typename T1, typename T2>
-inline ptrdiff_t distance (T1 i1, T2 i2)
+inline constexpr ptrdiff_t distance (T1 i1, T2 i2)
 {
     return (i2 - i1);
 }
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-#define UNVOID_DISTANCE(T1const,T2const)				   \
-template <> inline ptrdiff_t distance (T1const void* p1, T2const void* p2) \
+#define UNVOID_DISTANCE(T1const,T2const)   \
+template <> inline constexpr ptrdiff_t distance (T1const void* p1, T2const void* p2) \
 { return ((T2const uint8_t*)(p2) - (T1const uint8_t*)(p1)); }
 UNVOID_DISTANCE(,)
 UNVOID_DISTANCE(const,const)
@@ -145,37 +150,37 @@ UNVOID_DISTANCE(const,)
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 // The compiler issues a warning if an unsigned type is compared to 0.
-template <typename T, bool IsSigned> struct __is_negative { inline bool operator()(const T& v) { return (v < 0); } };
-template <typename T> struct __is_negative<T,false> { inline bool operator()(const T&) { return (false); } };
+template <typename T, bool IsSigned> struct __is_negative { inline constexpr bool operator()(const T& v) { return (v < 0); } };
+template <typename T> struct __is_negative<T,false> { inline constexpr bool operator()(const T&) { return (false); } };
 /// Warning-free way to check if \p v is negative, even if for unsigned types.
-template <typename T> inline bool is_negative (const T& v) { return (__is_negative<T,numeric_limits<T>::is_signed>()(v)); }
+template <typename T> inline constexpr bool is_negative (const T& v) { return (__is_negative<T,numeric_limits<T>::is_signed>()(v)); }
 #endif
 
 /// \brief Returns the absolute value of \p v
 /// Unlike the stdlib functions, this is inline and works with all types.
 template <typename T>
-inline T absv (T v)
+inline constexpr T absv (T v)
 {
     return (is_negative(v) ? -v : v);
 }
 
 /// \brief Returns -1 for negative values, 1 for positive, and 0 for 0
 template <typename T>
-inline T sign (T v)
+inline constexpr T sign (T v)
 {
     return ((0 < v) - is_negative(v));
 }
 
 /// Returns the absolute value of the distance i1 and i2
 template <typename T1, typename T2>
-inline size_t abs_distance (T1 i1, T2 i2)
+inline constexpr size_t abs_distance (T1 i1, T2 i2)
 {
     return (absv (distance(i1, i2)));
 }
 
 /// Returns the size of \p n elements of size \p T
 template <typename T>
-inline size_t size_of_elements (size_t n, const T*)
+inline constexpr size_t size_of_elements (size_t n, const T*)
 {
     return (n * sizeof(T));
 }
@@ -256,45 +261,31 @@ inline void DeleteVector (T*& p)
 
 /// Template of making != from ! and ==
 template <typename T>
-inline bool operator!= (const T& x, const T& y)
-{
-    return (!(x == y));
-}
+inline constexpr bool operator!= (const T& x, const T& y)
+    { return (!(x == y)); }
 
 /// Template of making > from <
 template <typename T>
-inline bool operator> (const T& x, const T& y)
-{
-    return (y < x);
-}
+inline constexpr bool operator> (const T& x, const T& y)
+    { return (y < x); }
 
 /// Template of making <= from < and ==
 template <typename T>
-inline bool operator<= (const T& x, const T& y)
-{
-    return (!(y < x));
-}
+inline constexpr bool operator<= (const T& x, const T& y)
+    { return (!(y < x)); }
 
 /// Template of making >= from < and ==
 template <typename T>
-inline bool operator>= (const T& x, const T& y)
-{
-    return (!(x < y));
-}
+inline constexpr bool operator>= (const T& x, const T& y)
+    { return (!(x < y)); }
 
 /// Packs \p s multiple times into \p b. Useful for loop unrolling.
 template <typename TSmall, typename TBig>
 inline void pack_type (TSmall s, TBig& b)
 {
-    const size_t n = sizeof(TBig) / sizeof(TSmall);
     b = s;
-    // Calls to min are here to avoid warnings for shifts bigger than the type. min will be gone when optimized.
-    if (n < 2) return;
-    b = (b << min (BitsInType(TSmall), BitsInType(TBig))) | b;
-    if (n < 4) return;
-    b = (b << min (BitsInType(TSmall) * 2, BitsInType(TBig))) | b;
-    if (n < 8) return;
-    b = (b << min (BitsInType(TSmall) * 4, BitsInType(TBig))) | b;
+    for (unsigned h = BitsInType(TSmall); h < BitsInType(TBig); h *= 2)
+	b = (b << h)|b;
 }
 
 /// \brief Divides \p n1 by \p n2 and rounds the result up.

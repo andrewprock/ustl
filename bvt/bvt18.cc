@@ -12,24 +12,29 @@ void TestTuple (const char* ctrType)
     cout << "Testing " << ctrType << endl;
     cout << "================================================" << endl;
     assert (N <= 8);
-    T pt1v[8] = { 1, 2, 3, 4, 5, 6, 7, 8 };
-    T increment;
+#if HAVE_CPP11
+    tuple<N,T> pt1 ({1,2,3,4,5,6,7,8});
+    tuple<N,T> pt2;
+    pt2 = {4,4,4,4};
+    pt2 += {1,2,3,4};
+#else
+    T pt1v[12] = { 1, 2, 3, 4, 5, 6, 7, 8 };
     tuple<N,T> pt1 (pt1v);
-    tuple<N,T> pt2 (5, 6, 7, 8);
-    increment = pt1v[2];
+    tuple<N,T> pt2 (&pt1v[4]);
+#endif
 
     cout << "pt1:\t\t\tsize = " << pt1.size() << ", value = " << pt1 << endl;
     cout << "pt2:\t\t\t" << pt2 << endl;
     iota (pt2.begin(), pt2.end(), 10);
     cout << "pt2:\t\t\t" << pt2 << endl;
 
-    pt1 *= increment;
+    pt1 *= 3;
     cout << "pt1 *= 3:\t\t" << pt1 << endl;
-    pt1 /= increment;
+    pt1 /= 3;
     cout << "pt1 /= 3:\t\t" << pt1 << endl;
-    pt1 += increment;
+    pt1 += 3;
     cout << "pt1 += 3:\t\t" << pt1 << endl;
-    pt1 -= increment;
+    pt1 -= 3;
     cout << "pt1 -= 3:\t\t" << pt1 << endl;
 
     pt1 *= pt2;

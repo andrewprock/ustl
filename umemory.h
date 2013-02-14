@@ -10,9 +10,9 @@
 #else
     #include <stdlib.h>
 #endif
-#include "upair.h"
 #include "uiterator.h"
 #include "ulimits.h"
+#include "upair.h"
 
 namespace ustl {
 
@@ -74,7 +74,7 @@ inline void construct (ForwardIterator first, ForwardIterator last)
 {
     typedef typename iterator_traits<ForwardIterator>::value_type value_type;
     if (numeric_limits<value_type>::is_integral)
-	memset (first, 0, distance(first,last)*sizeof(value_type));
+	memset ((void*) first, 0, max(distance(first,last),0)*sizeof(value_type));
     else
 	for (--last; intptr_t(first) <= intptr_t(last); ++first)
 	    construct (&*first);
@@ -189,3 +189,36 @@ ForwardIterator uninitialized_fill_n (ForwardIterator first, size_t n, const T& 
 }
     
 } // namespace ustl
+
+namespace std {	// Internal stuff must be in std::
+
+/// Internal class for compiler support of C++11 initializer lists
+template <typename T>
+class initializer_list {
+public:
+    typedef T 			value_type;
+    typedef size_t 		size_type;
+    typedef const T& 		const_reference;
+    typedef const_reference	reference;
+    typedef const T* 		const_iterator;
+    typedef const_iterator	iterator;
+private:
+    iterator			m_Data;
+    size_type			m_Size;
+private:
+    /// This object is only constructed by the compiler when the {1,2,3}
+    /// syntax is used, so the constructor must be private
+    inline constexpr		initializer_list (const_iterator p, size_type sz) noexcept : m_Data(p), m_Size(sz) {}
+public:
+    inline constexpr		initializer_list (void)noexcept	: m_Data(NULL), m_Size(0) {}
+    inline constexpr size_type	size (void) const noexcept	{ return (m_Size); }
+    inline constexpr const_iterator begin() const noexcept	{ return (m_Data); }
+    inline constexpr const_iterator end() const noexcept	{ return (begin()+size()); }
+};
+
+template <typename T>
+inline constexpr const T* begin (initializer_list<T> il) noexcept { return (il.begin()); }
+template <typename T>
+inline constexpr const T* end (initializer_list<T> il) noexcept { return (il.end()); }
+
+} // namespace std

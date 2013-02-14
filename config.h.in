@@ -54,11 +54,12 @@
     #define DLL_LOCAL
     #define INLINE
 #endif
-#if __cplusplus >= 201103L && (!__GNUC__ || __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
+#if __cplusplus >= 201103L && (!__GNUC__ || (__clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 2)) || (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)))
     #define HAVE_CPP11 1
 #endif
 #if !HAVE_CPP11
     #define noexcept		throw()
+    #define constexpr
 #endif
 #if __GNUC__ >= 3 && (__i386__ || __x86_64__)
     /// GCC 3+ supports the prefetch directive, which some CPUs use to improve caching

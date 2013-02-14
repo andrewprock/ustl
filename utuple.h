@@ -29,13 +29,17 @@ public:
     typedef ::ustl::reverse_iterator<const_iterator>	const_reverse_iterator;
     typedef pair<iterator,iterator>			range_t;
     typedef pair<const_iterator,const_iterator>		const_range_t;
+    typedef std::initializer_list<value_type>		initlist_t;
 public:
     template <typename T2>
     inline			tuple (const tuple<N,T2>& t);
     inline			tuple (const tuple<N,T>& t);
     inline			tuple (const_pointer v);
     inline			tuple (void);
-    explicit inline		tuple (const_reference v0, const_reference v1 = T(), const_reference v2 = T(), const_reference v3 = T());
+    inline explicit		tuple (const_reference v0);
+    inline			tuple (const_reference v0, const_reference v1);
+    inline			tuple (const_reference v0, const_reference v1, const_reference v2);
+    inline			tuple (const_reference v0, const_reference v1, const_reference v2, const_reference v3);
     inline iterator		begin (void)			{ return (m_v); }
     inline const_iterator	begin (void) const		{ return (m_v); }
     inline iterator		end (void)			{ return (begin() + N); }
@@ -48,23 +52,23 @@ public:
     inline const_reference	operator[] (size_type i) const	{ return (m_v[i]); }
     inline reference		operator[] (size_type i)	{ return (m_v[i]); }
     template <typename T2>
-    inline const tuple&		operator= (const tuple<N,T2>& src);
-    inline const tuple&		operator= (const tuple<N,T>& src);
-    inline const tuple&		operator+= (const_reference v)
+    inline tuple&		operator= (const tuple<N,T2>& src);
+    inline tuple&		operator= (const tuple<N,T>& src);
+    inline tuple&		operator+= (const_reference v)
 				    { for (uoff_t i = 0; i < N; ++ i) m_v[i] += v; return (*this); }
-    inline const tuple&		operator-= (const_reference v)
+    inline tuple&		operator-= (const_reference v)
 				    { for (uoff_t i = 0; i < N; ++ i) m_v[i] -= v; return (*this); }
-    inline const tuple&		operator*= (const_reference v)
+    inline tuple&		operator*= (const_reference v)
 				    { for (uoff_t i = 0; i < N; ++ i) m_v[i] *= v; return (*this); }
-    inline const tuple&		operator/= (const_reference v)
+    inline tuple&		operator/= (const_reference v)
 				    { for (uoff_t i = 0; i < N; ++ i) m_v[i] /= v; return (*this); }
-    inline const tuple		operator+ (const_reference v) const
+    inline tuple		operator+ (const_reference v) const
 				    { tuple result; for (uoff_t i = 0; i < N; ++ i) result[i] = m_v[i] + v; return (result); }
-    inline const tuple		operator- (const_reference v) const
+    inline tuple		operator- (const_reference v) const
 				    { tuple result; for (uoff_t i = 0; i < N; ++ i) result[i] = m_v[i] - v; return (result); }
-    inline const tuple		operator* (const_reference v) const
+    inline tuple		operator* (const_reference v) const
 				    { tuple result; for (uoff_t i = 0; i < N; ++ i) result[i] = m_v[i] * v; return (result); }
-    inline const tuple		operator/ (const_reference v) const
+    inline tuple		operator/ (const_reference v) const
 				    { tuple result; for (uoff_t i = 0; i < N; ++ i) result[i] = m_v[i] / v; return (result); }
     inline void			swap (tuple<N,T>& v)
 				    { for (uoff_t i = 0; i < N; ++ i) ::ustl::swap (m_v[i], v.m_v[i]); }
@@ -72,6 +76,19 @@ public:
     inline void			write (ostream& os) const		{ nr_container_write (os, *this); }
     inline void			text_write (ostringstream& os) const	{ container_text_write (os, *this); }
     inline size_t		stream_size (void) const		{ return (nr_container_stream_size (*this)); }
+#if HAVE_CPP11
+    inline			tuple (initlist_t v)			{ assign (v); }
+    inline tuple&		assign (initlist_t v);
+    inline tuple&		operator= (initlist_t v)		{ return (assign(v)); }
+    inline tuple&		operator+= (initlist_t v)
+				    { for (uoff_t i = 0; i < min(N,v.size()); ++ i) m_v[i] += v.begin()[i]; return (*this); }
+    inline tuple&		operator-= (initlist_t v)
+				    { for (uoff_t i = 0; i < min(N,v.size()); ++ i) m_v[i] -= v.begin()[i]; return (*this); }
+    inline tuple&		operator*= (initlist_t v)
+				    { for (uoff_t i = 0; i < min(N,v.size()); ++ i) m_v[i] *= v.begin()[i]; return (*this); }
+    inline tuple&		operator/= (initlist_t v)
+				    { for (uoff_t i = 0; i < min(N,v.size()); ++ i) m_v[i] /= v.begin()[i]; return (*this); }
+#endif
 private:
     T				m_v [N];
 };
@@ -85,47 +102,66 @@ namespace ustl {
 template <size_t N, typename T>
 template <typename T2>
 inline tuple<N,T>::tuple (const tuple<N,T2>& t)
-{ simd::pconvert (t, *this, simd::fcast<T2,T>()); }
+    { simd::pconvert (t, *this, simd::fcast<T2,T>()); }
 
 template <size_t N, typename T>
 inline tuple<N,T>::tuple (const tuple<N,T>& t)
-{ simd::passign (t, *this); }
+    { simd::passign (t, *this); }
 
 template <size_t N, typename T>
 inline tuple<N,T>::tuple (const_pointer v)
-{ simd::ipassign (v, *this); }
+    { simd::ipassign (v, *this); }
 
 template <size_t N, typename T>
 inline tuple<N,T>::tuple (void)
+    { fill_n (m_v, N, T()); }
+
+template <size_t N, typename T>
+inline tuple<N,T>::tuple (const_reference v0)
+    { fill_n (m_v, N, v0); }
+
+template <size_t N, typename T>
+inline tuple<N,T>::tuple (const_reference v0, const_reference v1)
 {
-    const T v = T();
-    if (N > 4 || !numeric_limits<T>::is_integral)
-	fill_n (m_v, N, v);
-    else {
-	m_v[0] = v;
-	if (N > 1) m_v[1] = v;
-	if (N > 2) m_v[2] = v;
-	if (N > 3) m_v[3] = v;
-    }
+    m_v[0] = v0;
+    fill_n (m_v+1, N-1, v1);
+}
+
+template <size_t N, typename T>
+inline tuple<N,T>::tuple (const_reference v0, const_reference v1, const_reference v2)
+{
+    m_v[0] = v0;
+    m_v[1] = v1;
+    fill_n (m_v+2, N-2, v2);
 }
 
 template <size_t N, typename T>
 inline tuple<N,T>::tuple (const_reference v0, const_reference v1, const_reference v2, const_reference v3)
 {
     m_v[0] = v0;
-    if (N > 1) m_v[1] = v1;
-    if (N > 2) m_v[2] = v2;
-    if (N > 3) m_v[3] = v3;
-    if (N > 4) fill_n (m_v + 4, N - 4, T());
+    m_v[1] = v1;
+    m_v[2] = v2;
+    fill_n (m_v+3, N-3, v3);
 }
+
+#if HAVE_CPP11
+template <size_t N, typename T>
+inline tuple<N,T>& tuple<N,T>::assign (initlist_t v)
+{
+    const size_t isz = min (v.size(), N);
+    copy_n (v.begin(), isz, begin());
+    fill_n (begin()+isz, N-isz, T());
+    return (*this);
+}
+#endif
 
 template <size_t N, typename T>
 template <typename T2>
-inline const tuple<N,T>& tuple<N,T>::operator= (const tuple<N,T2>& src)
+inline tuple<N,T>& tuple<N,T>::operator= (const tuple<N,T2>& src)
 { simd::pconvert (src, *this, simd::fcast<T2,T>()); return (*this); }
 
 template <size_t N, typename T>
-inline const tuple<N,T>& tuple<N,T>::operator= (const tuple<N,T>& src)
+inline tuple<N,T>& tuple<N,T>::operator= (const tuple<N,T>& src)
 { simd::passign (src, *this); return (*this); }
 
 template <size_t N, typename T1, typename T2>
@@ -147,23 +183,23 @@ inline bool operator< (const tuple<N,T1>& t1, const tuple<N,T2>& t2)
 }
 
 template <size_t N, typename T1, typename T2>
-inline const tuple<N,T1>& operator+= (tuple<N,T1>& t1, const tuple<N,T2>& t2)
+inline tuple<N,T1>& operator+= (tuple<N,T1>& t1, const tuple<N,T2>& t2)
     { for (uoff_t i = 0; i < N; ++ i) t1[i] = T1(t1[i] + t2[i]); return (t1); }
 
 template <size_t N, typename T1, typename T2>
-inline const tuple<N,T1>& operator-= (tuple<N,T1>& t1, const tuple<N,T2>& t2)
+inline tuple<N,T1>& operator-= (tuple<N,T1>& t1, const tuple<N,T2>& t2)
     { for (uoff_t i = 0; i < N; ++ i) t1[i] = T1(t1[i] - t2[i]); return (t1); }
 
 template <size_t N, typename T1, typename T2>
-inline const tuple<N,T1>& operator*= (tuple<N,T1>& t1, const tuple<N,T2>& t2)
+inline tuple<N,T1>& operator*= (tuple<N,T1>& t1, const tuple<N,T2>& t2)
     { for (uoff_t i = 0; i < N; ++ i) t1[i] = T1(t1[i] * t2[i]); return (t1); }
 
 template <size_t N, typename T1, typename T2>
-inline const tuple<N,T1>& operator/= (tuple<N,T1>& t1, const tuple<N,T2>& t2)
+inline tuple<N,T1>& operator/= (tuple<N,T1>& t1, const tuple<N,T2>& t2)
     { for (uoff_t i = 0; i < N; ++ i) t1[i] = T1(t1[i] / t2[i]); return (t1); }
 
 template <size_t N, typename T1, typename T2>
-inline const tuple<N,T1> operator+ (const tuple<N,T1>& t1, const tuple<N,T2>& t2)
+inline tuple<N,T1> operator+ (const tuple<N,T1>& t1, const tuple<N,T2>& t2)
 {
     tuple<N,T1> result;
     for (uoff_t i = 0; i < N; ++ i) result[i] = T1(t1[i] + t2[i]);
@@ -171,7 +207,7 @@ inline const tuple<N,T1> operator+ (const tuple<N,T1>& t1, const tuple<N,T2>& t2
 }
 
 template <size_t N, typename T1, typename T2>
-inline const tuple<N,T1> operator- (const tuple<N,T1>& t1, const tuple<N,T2>& t2)
+inline tuple<N,T1> operator- (const tuple<N,T1>& t1, const tuple<N,T2>& t2)
 {
     tuple<N,T1> result;
     for (uoff_t i = 0; i < N; ++ i) result[i] = T1(t1[i] - t2[i]);
@@ -179,7 +215,7 @@ inline const tuple<N,T1> operator- (const tuple<N,T1>& t1, const tuple<N,T2>& t2
 }
 
 template <size_t N, typename T1, typename T2>
-inline const tuple<N,T1> operator* (const tuple<N,T1>& t1, const tuple<N,T2>& t2)
+inline tuple<N,T1> operator* (const tuple<N,T1>& t1, const tuple<N,T2>& t2)
 {
     tuple<N,T1> result;
     for (uoff_t i = 0; i < N; ++ i) result[i] = T1(t1[i] * t2[i]);
@@ -187,7 +223,7 @@ inline const tuple<N,T1> operator* (const tuple<N,T1>& t1, const tuple<N,T2>& t2
 }
 
 template <size_t N, typename T1, typename T2>
-inline const tuple<N,T1> operator/ (const tuple<N,T1>& t1, const tuple<N,T2>& t2)
+inline tuple<N,T1> operator/ (const tuple<N,T1>& t1, const tuple<N,T2>& t2)
 {
     tuple<N,T1> result;
     for (uoff_t i = 0; i < N; ++ i) result[i] = T1(t1[i] / t2[i]);
@@ -257,13 +293,13 @@ template <> inline tuple<2,type>::tuple (void)	\
 { asm("":"+m"(m_v[0]),"+m"(m_v[1])::"memory");	\
   *noalias_cast<uint32_t*>(m_v) = 0;		\
   asm("":"+m"(m_v[0]),"+m"(m_v[1])::"memory"); }\
-template <> inline const tuple<2,type>& tuple<2,type>::operator= (const tuple<2,type>& v)\
+template <> inline tuple<2,type>& tuple<2,type>::operator= (const tuple<2,type>& v)\
 { asm ("mov %3, %0"							\
        :"=m"(*noalias_cast<uint32_t*>(m_v)),"=m"(m_v[0]),"=m"(m_v[1])	\
        :"r"(*noalias_cast<const uint32_t*>(v.begin())),"m"(v[0]),"m"(v[1]):"memory");	\
   return (*this); }							\
 template <> template <>							\
-inline const tuple<2,type>& tuple<2,type>::operator= (const tuple<2,otype>& v)\
+inline tuple<2,type>& tuple<2,type>::operator= (const tuple<2,otype>& v)\
 { asm ("mov %3, %0"							\
        :"=m"(*noalias_cast<uint32_t*>(m_v)),"=m"(m_v[0]),"=m"(m_v[1])	\
        :"r"(*noalias_cast<const uint32_t*>(v.begin())),"m"(v[0]),"m"(v[1]):"memory");	\
@@ -276,14 +312,14 @@ inline tuple<2,type>::tuple (const tuple<2,otype>& v)			\
 template<> inline void tuple<2,type>::swap (tuple<2,type>& v)		\
 { asm(""::"m"(m_v[0]),"m"(m_v[1]),"m"(v.m_v[0]),"m"(v.m_v[1]):"memory");\
   iter_swap (noalias_cast<uint32_t*>(m_v), noalias_cast<uint32_t*>(v.m_v));			\
-  asm("":"=m"(m_v[0]),"=m"(m_v[1]),"=m"(v.m_v[0]),"=m"(v.m_v[1])::"memory"); }				\
-template <> inline const tuple<2,type>& operator+= (tuple<2,type>& t1, const tuple<2,type>& t2)	\
+  asm("":"=m"(m_v[0]),"=m"(m_v[1]),"=m"(v.m_v[0]),"=m"(v.m_v[1])::"memory"); }			\
+template <> inline tuple<2,type>& operator+= (tuple<2,type>& t1, const tuple<2,type>& t2)	\
     { t1[0] += t2[0]; t1[1] += t2[1]; return (t1); }						\
-template <> inline const tuple<2,type>& operator-= (tuple<2,type>& t1, const tuple<2,type>& t2)	\
+template <> inline tuple<2,type>& operator-= (tuple<2,type>& t1, const tuple<2,type>& t2)	\
     { t1[0] -= t2[0]; t1[1] -= t2[1]; return (t1); }						\
-template <> inline const tuple<2,type> operator+ (const tuple<2,type>& t1, const tuple<2,type>& t2) \
+template <> inline tuple<2,type> operator+ (const tuple<2,type>& t1, const tuple<2,type>& t2)	\
     { return (tuple<2,type> (t1[0] + t2[0], t1[1] + t2[1])); }					\
-template <> inline const tuple<2,type> operator- (const tuple<2,type>& t1, const tuple<2,type>& t2) \
+template <> inline tuple<2,type> operator- (const tuple<2,type>& t1, const tuple<2,type>& t2)	\
     { return (tuple<2,type> (t1[0] - t2[0], t1[1] - t2[1])); }
 UINT32_TUPLE_SPECS(int16_t,uint16_t)
 UINT32_TUPLE_SPECS(uint16_t,int16_t)
@@ -296,21 +332,21 @@ UINT32_TUPLE_SPECS(uint16_t,int16_t)
 #undef TUPLEV_W2
 
 #define SIMD_TUPLE_PACKOP(N,T)	\
-template <> inline const tuple<N,T>& operator+= (tuple<N,T>& t1, const tuple<N,T>& t2)	\
+template <> inline tuple<N,T>& operator+= (tuple<N,T>& t1, const tuple<N,T>& t2)	\
     { simd::padd (t2, t1); return (t1); }						\
-template <> inline const tuple<N,T>& operator-= (tuple<N,T>& t1, const tuple<N,T>& t2)	\
+template <> inline tuple<N,T>& operator-= (tuple<N,T>& t1, const tuple<N,T>& t2)	\
     { simd::psub (t2, t1); return (t1); }						\
-template <> inline const tuple<N,T>& operator*= (tuple<N,T>& t1, const tuple<N,T>& t2)	\
+template <> inline tuple<N,T>& operator*= (tuple<N,T>& t1, const tuple<N,T>& t2)	\
     { simd::pmul (t2, t1); return (t1); }						\
-template <> inline const tuple<N,T>& operator/= (tuple<N,T>& t1, const tuple<N,T>& t2)	\
+template <> inline tuple<N,T>& operator/= (tuple<N,T>& t1, const tuple<N,T>& t2)	\
     { simd::pdiv (t2, t1); return (t1); }						\
-template <> inline const tuple<N,T> operator+ (const tuple<N,T>& t1, const tuple<N,T>& t2) \
+template <> inline tuple<N,T> operator+ (const tuple<N,T>& t1, const tuple<N,T>& t2)	\
     { tuple<N,T> result (t1); simd::padd (t2, result); return (result); }		\
-template <> inline const tuple<N,T> operator- (const tuple<N,T>& t1, const tuple<N,T>& t2) \
+template <> inline tuple<N,T> operator- (const tuple<N,T>& t1, const tuple<N,T>& t2)	\
     { tuple<N,T> result (t1); simd::psub (t2, result); return (result); }		\
-template <> inline const tuple<N,T> operator* (const tuple<N,T>& t1, const tuple<N,T>& t2) \
+template <> inline tuple<N,T> operator* (const tuple<N,T>& t1, const tuple<N,T>& t2)	\
     { tuple<N,T> result (t1); simd::pmul (t2, result); return (result); }		\
-template <> inline const tuple<N,T> operator/ (const tuple<N,T>& t1, const tuple<N,T>& t2) \
+template <> inline tuple<N,T> operator/ (const tuple<N,T>& t1, const tuple<N,T>& t2)	\
     { tuple<N,T> result (t1); simd::pdiv (t2, result); return (result); }
 SIMD_TUPLE_PACKOP(4,float)
 SIMD_TUPLE_PACKOP(2,float)

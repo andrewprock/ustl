@@ -8,8 +8,10 @@
 
 namespace ustl {
 
-#define __limits_digits(T)	(sizeof(T)*8)
-#define __limits_digits10(T)	(sizeof(T)*8*643/2136+1)
+namespace {
+template <typename T> struct __limits_digits { enum { value = sizeof(T)*8 };};
+template <typename T> struct __limits_digits10 { enum { value = sizeof(T)*8*643/2136+1 };};
+}
 
 /// \class numeric_limits ulimits.h ustl.h
 /// \brief Defines numeric limits for a type.
@@ -17,39 +19,39 @@ namespace ustl {
 template <typename T> 
 struct numeric_limits {
     /// Returns the minimum value for type T.
-    static inline T min (void)		{ return (T(0)); }
+    static inline constexpr T min (void)		{ return (T(0)); }
     /// Returns the minimum value for type T.
-    static inline T max (void)		{ return (T(0)); }
+    static inline constexpr T max (void)		{ return (T(0)); }
     static const bool is_signed = false;	///< True if the type is signed.
     static const bool is_integer = false;	///< True if stores an exact value.
     static const bool is_integral = false;	///< True if fixed size and cast-copyable.
-    static const unsigned digits = __limits_digits(T);		///< Number of bits in T
-    static const unsigned digits10 = __limits_digits10(T);	///< Maximum number of decimal digits in printed version of T
+    static const unsigned digits = __limits_digits<T>::value;		///< Number of bits in T
+    static const unsigned digits10 = __limits_digits10<T>::value;	///< Maximum number of decimal digits in printed version of T
 };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
 template <typename T>
 struct numeric_limits<T*> {
-    static inline T* min (void)	{ return (NULL); }
-    static inline T* max (void)	{ return (reinterpret_cast<T*>(UINTPTR_MAX)); }
+    static inline constexpr T* min (void)	{ return (NULL); }
+    static inline constexpr T* max (void)	{ return (reinterpret_cast<T*>(UINTPTR_MAX)); }
     static const bool is_signed = false;
     static const bool is_integer = true;
     static const bool is_integral = true;
-    static const unsigned digits = __limits_digits(T*);
-    static const unsigned digits10 = __limits_digits10(T*);
+    static const unsigned digits = __limits_digits<T*>::value;
+    static const unsigned digits10 = __limits_digits10<T*>::value;
 };
 
 #define _NUMERIC_LIMITS(type, minVal, maxVal, bSigned, bInteger, bIntegral)	\
-template <>							\
-struct numeric_limits<type> {					\
-    static inline type min (void)	{ return (minVal); }	\
-    static inline type max (void)	{ return (maxVal); }	\
-    static const bool is_signed = bSigned;			\
-    static const bool is_integer = bInteger;			\
-    static const bool is_integral = bIntegral;			\
-    static const unsigned digits = __limits_digits(type);	\
-    static const unsigned digits10 = __limits_digits10(type);	\
+template <>								\
+struct numeric_limits<type> {						\
+    static inline constexpr type min (void)	{ return (minVal); }	\
+    static inline constexpr type max (void)	{ return (maxVal); }	\
+    static const bool is_signed = bSigned;				\
+    static const bool is_integer = bInteger;				\
+    static const bool is_integral = bIntegral;				\
+    static const unsigned digits = __limits_digits<type>::value;	\
+    static const unsigned digits10 = __limits_digits10<type>::value;	\
 }
 
 //--------------------------------------------------------------------------------------

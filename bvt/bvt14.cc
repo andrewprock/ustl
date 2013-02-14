@@ -17,14 +17,23 @@ void TestMap (void)
     months["june"] = 30;
     months["july"] = 31;
     months["august"] = 31;
+#if HAVE_CPP11
+    months.insert ({
+	{"september",30},
+	{"october",31},
+	{"november",30},
+	{"december",31}
+    });
+#else
     months["september"] = 30;
     months["october"] = 31;
     months["november"] = 30;
     months["december"] = 31;
+#endif
     
     const monthmap_t& cmonths = months;
     cout << "There are " << cmonths["january"] << " days in january." << endl;
-    cout << "There are " << cmonths["september"] << " days in september." << endl;
+    cout << "There are " << cmonths.at("september") << " days in september." << endl;
     cout << "There are " << cmonths["december"] << " days in december." << endl;
     monthmap_t::const_iterator found_may = months.find ("may");
     cout << found_may->first << " found at index " << found_may - months.begin() << endl;
@@ -49,7 +58,11 @@ void TestMap (void)
     cout << endl;
 
     mcopy = months;
+#if HAVE_CPP11
+    monthmap_t::iterator frob = mcopy.emplace_hint (mcopy.begin(), make_pair (string("frobuary"), 42));
+#else
     monthmap_t::iterator frob = mcopy.insert (mcopy.begin(), make_pair (string("frobuary"), 42));
+#endif
     cout << "After inserting " << frob->first << "," << frob->second << ":" << endl;
     for (i = mcopy.begin(); i < mcopy.end(); ++ i)
 	cout << i->first << " ";

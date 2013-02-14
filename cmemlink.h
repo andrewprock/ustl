@@ -64,6 +64,7 @@ public:
     inline size_type	max_size (void) const		{ return (size()); }
     inline size_type	readable_size (void) const	{ return (size()); }
     inline bool		empty (void) const		{ return (!size()); }
+   inline const_pointer	data (void) const		{ return (m_Data); }
    inline const_pointer	cdata (void) const		{ return (m_Data); }
     inline iterator	begin (void) const		{ return (iterator (cdata())); }
     inline iterator	iat (size_type i) const		{ assert (i <= size()); return (begin() + i); }
