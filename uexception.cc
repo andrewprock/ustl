@@ -189,7 +189,8 @@ void file_exception::read (istream& is)
     string filename;
     is >> filename;
     is.align (8);
-    filename.copyto (filename, VectorSize(m_Filename));
+    strncpy (m_Filename, filename.c_str(), VectorSize(m_Filename));
+    m_Filename [VectorSize(m_Filename)-1] = 0;
 }
 
 /// Writes the exception into stream \p os.

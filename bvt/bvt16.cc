@@ -55,11 +55,11 @@ void TestUTF8 (void)
     cout << "Testing wide character string::insert\n";
     string ws ("1234567890", 10);
 
-    ws.insert (ws.find('1'), wchar_t(1234));
+    ws.insert (ws.find('1'), 1, wchar_t(1234));
     static const wchar_t c_WChars[2] = { 3456, 4567 };
     ws.insert (ws.find('3'), VectorRange(c_WChars), 2);
-    ws.insert (ws.find('3'), wchar_t(2345));
-    ws.insert (ws.size(), wchar_t(5678));
+    ws.insert (ws.find('3'), 1, wchar_t(2345));
+    ws.insert (ws.size(), 1, wchar_t(5678));
     cout.format ("Values[%zu]:", ws.length());
     for (string::utf8_iterator j = ws.utf8_begin(); j < ws.utf8_end(); ++ j)
 	cout.format (" %u", uint32_t(*j));

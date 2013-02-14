@@ -97,7 +97,7 @@ ofstream::size_type ofstream::overflow (size_type n)
 /// Constructs a stream to read from \p Fd.
 ifstream::ifstream (int Fd)
 : istringstream (),
-  m_Buffer (255),
+  m_Buffer (255,'\0'),
   m_File (Fd)
 {
     link (m_Buffer.data(), streamsize(0));
@@ -106,7 +106,7 @@ ifstream::ifstream (int Fd)
 /// Constructs a stream to read from \p filename.
 ifstream::ifstream (const char* filename, openmode mode)
 : istringstream (),
-  m_Buffer (255),
+  m_Buffer (255,'\0'),
   m_File (filename, mode)
 {
     clear (m_File.rdstate());

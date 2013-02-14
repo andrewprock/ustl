@@ -95,16 +95,13 @@ string& string::append (size_type n, value_type c)
     return (*this);
 }
 
-/// Copies into itself at offset \p start, the value of string \p p of length \p n.
-string::size_type string::copyto (pointer p, size_type n, const_iterator start) const
+/// Copies [start,start+n) into [p,n). The result is not null terminated.
+string::size_type string::copy (pointer p, size_type n, size_type start) const noexcept
 {
-    assert (p && n);
-    if (!start)
-	start = begin();
-    const size_type btc = min(n-1, size());
-    copy_n (start, btc, p);
-    p[btc] = 0;
-    return (btc+1);
+    assert (p && n && start <= size());
+    const size_type btc = min(n, size()-start);
+    copy_n (iat(start), btc, p);
+    return (btc);
 }
 
 /// Returns comparison value regarding string \p s.
@@ -144,7 +141,7 @@ string::const_iterator string::wiat (size_type i) const
 /// able to know the character position in a localized string; different
 /// languages will have different character counts, so use find instead.
 ///
-string& string::insert (size_type ipo, wchar_t c, size_type n)
+string& string::insert (size_type ipo, size_type n, wvalue_type c)
 {
     iterator ip (iat(ipo));
     ip = iterator (memblock::insert (memblock::iterator(ip), n * Utf8Bytes(c)));
@@ -154,7 +151,7 @@ string& string::insert (size_type ipo, wchar_t c, size_type n)
 }
 
 /// Inserts sequence of wide characters at \p ipo (byte position from a find call)
-string& string::insert (size_type ipo, const wchar_t* first, const wchar_t* last, const size_type n)
+string& string::insert (size_type ipo, const wvalue_type* first, const wvalue_type* last, const size_type n)
 {
     iterator ip (iat(ipo));
     size_type nti = distance (first, last), bti = 0;
@@ -170,7 +167,7 @@ string& string::insert (size_type ipo, const wchar_t* first, const wchar_t* last
 }
 
 /// Inserts character \p c into this string at \p start.
-string::iterator string::insert (const_iterator start, value_type c, size_type n)
+string::iterator string::insert (const_iterator start, size_type n, value_type c)
 {
     memblock::iterator ip = memblock::insert (memblock::const_iterator(start), n);
     fill_n (ip, n, c);
