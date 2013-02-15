@@ -50,6 +50,8 @@ ofstream::ofstream (const char* filename, openmode mode)
 ofstream::~ofstream (void) noexcept
 {
     try { flush(); } catch (...) {}
+    if (m_File.fd() <= STDERR_FILENO)	// Do not close cin,cout,cerr
+	m_File.detach();
 }
 
 /// Flushes the buffer and closes the file.
