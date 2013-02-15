@@ -62,20 +62,17 @@ it's the sight of clean, concise, and fast code. Therefore this library.
 <p>
 To start with you'll need a decent compiler. Although uSTL will compile
 under gcc 2.95, some features require at least gcc 3.4 and are simply
-turned off with an older version. C++ support is vastly improved in
-the recent compiler versions, and I strongly recommend gcc 4 for best
-possible code.
+turned off with an older version. The minimum requirement to enable
+C++11 features is gcc 4.6 or clang 3.2.
 </p><p>
 The latest version of uSTL can always be downloaded from its SourceForge
-<a href="https://sourceforge.net/project/showfiles.php?group_id=76798">project files page</a>.
+<a href="https://sourceforge.net/projects/ustl/files/">project files page</a>.
 If you like living dangerously, you can pull the working branch directly from
-<a href="http://ustl.git.sourceforge.net/git/gitweb.cgi?p=ustl">git://ustl.git.sourceforge.net/gitroot/ustl/ustl</a>.
-The mainline source should build on any unix-based system, including Linux,
-BSD, MacOS, SunOS, and Solaris. A separate port for Symbian OS is maintained by
-<a href="http://www.penrillian.com/index.php?option=com_content&amp;task=view&amp;id=82&amp;Itemid=73">Penrillian</a>.
-Windows-based systems and weird embedded platforms, are not, and will
-not be supported by the mainline. However, if you make a port, I'll be
-happy to mention it here. After unpacking:
+<a href="https://sourceforge.net/p/ustl/code/?branch=ref%2Fmaster">git://git.code.sf.net/p/ustl/code</a>.
+The mainline source should build on any unix-based system, including
+Linux, BSD, MacOS, SunOS, and Solaris. Windows-based systems and embedded
+platforms, are not, and will not be supported by the mainline. However,
+if you make a port, I'll be happy to mention it here. After unpacking:
 </p><pre>
 ./configure
 make install
@@ -122,7 +119,7 @@ the container representing a simple array:
 </p><pre>
 vector&lt;int&gt; v;
 v.push_back (1);
-v.push_back (2);
+v.emplace_back (2);
 v[1] = 0;
 v.erase (v.begin() + 1);
 v.pop_back();
@@ -328,7 +325,7 @@ algorithms is questionable.  Their readability is even more so,
 considering that the above fifteen line example can be written as a
 three line iterative foreach loop. Finally, there is the problem of
 where to put the functor. It just doesn't seem to "belong" anywhere in
-the object-oriented world. (C++0x changes that somewhat with lambda
+the object-oriented world. (C++11 changes that somewhat with lambda
 functions) Sorry, Stepanov, I just don't see how these things can be
 anything but an ugly, bloated hindrance.
 </p>
@@ -609,107 +606,94 @@ int main (void)
     return (EXIT_SUCCESS);
 }
 </pre><p>
-Feel free to compile it and see for yourself. I'm compiling on a Core
-i7 with gcc 4.5.2 and <kbd>-Os -DNDEBUG=1</kbd>. The libstdc++ version
-is linked implicitly with it, and uSTL version is linked with gcc
+Feel free to compile it and see for yourself. I'm compiling on a Core i7
+with gcc 4.7.2 and <kbd>-Os -DNDEBUG=1 -march=native</kbd>. The libstdc++
+version is linked implicitly with it, and uSTL version is linked with gcc
 (instead of g++) and <kbd>-lustl</kbd>. Both executables are stripped.
 The libstdc++ version looks like this:
 </p><pre>
 % ls -l std/tes
-7096 tes
+6896 tes
 % size std/tes
 text	data	bss	dec	hex	filename
-3780	632	16	4428	114c	std/tes
+3522	656	8	4186	105a	std/tes
 % size -A std/tes.o
-std/tes.o  :
+std/tes.o:
 section                                                                                                      size
 .group                                                                                                          8
 .group                                                                                                          8
 .group                                                                                                          8
 .group                                                                                                          8
 .group                                                                                                          8
-.group                                                                                                          8
-.group                                                                                                          8
-.group                                                                                                          8
-.group                                                                                                          8
-.group                                                                                                          8
-.group                                                                                                          8
-.text                                                                                                         256
+.text                                                                                                          11
 .data                                                                                                           0
 .bss                                                                                                            0
-.text._ZNSt6vectorIiSaIiEED2Ev                                                                                  8
-.text._ZNKSt6vectorIiSaIiEE12_M_check_lenEmPKc                                                                 68
-.text._ZNSt11__copy_moveILb0ELb1ESt26random_access_iterator_tagE8__copy_mIiEEPT_PKS3_S6_S4_                    51
-.text._ZSt14__copy_move_a2ILb0EN9__gnu_cxx17__normal_iteratorIPiSt6vectorIiSaIiEEEES6_ET1_T0_S8_S7_            14
-.text._ZSt4copyIN9__gnu_cxx17__normal_iteratorIPiSt6vectorIiSaIiEEEES6_ET0_T_S8_S7_                            14
-.text._ZNSt20__copy_move_backwardILb0ELb1ESt26random_access_iterator_tagE13__copy_move_bIiEEPT_PKS3_S6_S4_     63
+.text._ZNKSt6vectorIiSaIiEE12_M_check_lenEmPKc                                                                 61
+.text._ZNSt11__copy_moveILb0ELb1ESt26random_access_iterator_tagE8__copy_mIiEEPT_PKS3_S6_S4_                    45
+.text._ZNSt20__copy_move_backwardILb0ELb1ESt26random_access_iterator_tagE13__copy_move_bIiEEPT_PKS3_S6_S4_     58
 .rodata.str1.1                                                                                                 45
-.text._ZNSt6vectorIiSaIiEE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPiS1_EEmRKi                         355
-.text._ZNSt6vectorIiSaIiEE6resizeEmi                                                                           64
-.text._ZNSt6vectorIiSaIiEE13_M_insert_auxEN9__gnu_cxx17__normal_iteratorIPiS1_EERKi                           195
-.text._ZNSt6vectorIiSaIiEE9push_backERKi                                                                       46
-.text._ZNSt6vectorIiSaIiEE6insertEN9__gnu_cxx17__normal_iteratorIPiS1_EERKi                                    79
-.gcc_except_table                                                                                              14
-.comment                                                                                                       40
+.text._ZNSt6vectorIiSaIiEE14_M_fill_insertEN9__gnu_cxx17__normal_iteratorIPiS1_EEmRKi                         386
+.text._ZNSt6vectorIiSaIiEE13_M_insert_auxEN9__gnu_cxx17__normal_iteratorIPiS1_EERKi                           232
+.text.startup                                                                                                 294
+.gcc_except_table                                                                                              20
+.comment                                                                                                       18
 .note.GNU-stack                                                                                                 0
-.eh_frame                                                                                                     576
-Total                                                                                                        1976
+.eh_frame                                                                                                     368
+Total                                                                                                        1578
 </pre><p>
 The uSTL version looks like this:
 </p><pre>
 % ls -l ustl/tes
-5720 tes
+5704 tes
 % size ustl/tes
 text	data	bss	dec	hex	filename
-2435	616	16	3067	bfb	ustl/tes
+2383	640	8	3031	bd7	ustl/tes
 % size -A ustl/tes.o
-ustl/tes.o  :
-section             size   addr
-.text                327      0
-.data                  0      0
-.bss                   0      0
-.gcc_except_table     19      0
-.comment              40      0
-.note.GNU-stack        0      0
-.eh_frame             88      0
-Total                474
+ustl/tes.o:
+section             size
+.text                  0
+.data                  0
+.bss                   0
+.text.startup        277
+.gcc_except_table     19
+.comment              18
+.note.GNU-stack        0
+.eh_frame             72
+Total                386
 </pre><p>
-Let's see what's going on here. The .text size in the std version is
-smaller, indicating less inlined functionality. This version of gcc
-libstdc++ instantiates additional eleven functions totalling 953 bytes
-just for this one vector type. These functions will become larger for
-containers with objects, but about 1k in savings that you see as the
-difference in execuable size is a good measure. The uSTL version inlines
-everything and calls memblock functions instead.
-</p><p>
-1k doesn't seem like much, but consider that you get it for <em>every
-type of container you instantiate</em>! An int vector here, a float
-vector here, a bunch of object containers there, and before you know it
-you are using half your executable just for container overhead.
+As you can see, the libstdc++ version instantiates quite a bit of code
+for just this one vector type, with out-of-line functions for copy, move,
+insert, and fill. Because uSTL aggregates memory management into a single
+location (the memblock class), all of those calls can be efficiently
+forwarded there, saving about a kilobyte of code. 1k doesn't seem like
+much, but consider that you get it for <em>every type of container you
+instantiate</em>! An int vector here, a float vector here, a bunch of
+object containers there, and before you know it you are using half your
+executable just for container overhead.
 </p><p>
 But wait, there is more! Let's look at the total memory footprint:
 </p><pre>
 % footprint std/tes
    text	   data	    bss	    dec	    hex	filename
-   3780	    632	     16	   4428	   114c	tes
-  84445	    928	    632	  86005	  14ff5	libgcc_s.so.1
- 527390	    720	     72	 528182	  80f36	libm.so.6
- 962481	  34816	  84664	1081961	 108269	libstdc++.so.6
-1404487	  18024	  20032	1442543	 1602ef	libc.so.6
-2982583	  55120	 105416	3143119	 2ff5cf	(TOTALS)
+   3522	    656	      8	   4186	   105a	tes
+  83357	    968	    664	  84989	  14bfd	libgcc_s.so.1
+1031819	   1100	     72	1032991	  fc31f	libm.so.6
+ 935489	  36200	  85088	1056777	 102009	libstdc++.so.6
+1715642	  20560	  17800	1754002	 1ac392	libc.so.6
+3769829	  59484	 103632	3932945	 3c0311	(TOTALS)
 
 % footprint ustl/tes
    text	   data	    bss	    dec	    hex	filename
-   2435	    616	     16	   3067	    bfb	tes
-  84445	    928	    632	  86005	  14ff5	libgcc_s.so.1
- 152800	  10408	  73248	 236456	  39ba8	libustl.so.1.5
-1404487	  18024	  20032	1442543	 1602ef	libc.so.6
-1644167	  29976	  93928	1768071	 1afa87	(TOTALS)
+   2383	    640	      8	   3031	    bd7	tes
+  83357	    968	    664	  84989	  14bfd	libgcc_s.so.1
+ 151398	  10848	  73240	 235486	  397de	libustl.so.2
+1715642	  20560	  17800	1754002	 1ac392	libc.so.6
+1952780	  33016	  91712	2077508	 1fb344	(TOTALS)
 </pre><p>
-As you can see, the footprint for the uSTL version is 44% smaller,
-saving 1375048 bytes. If you don't count libc, measuring only the
-C++-specific overhead, libstdc++ loads 1696148 while libustl only 322461,
-<em>five times less</em>! Finally, most of uSTL's size comes from gcc's
+As you can see, the footprint for the uSTL version is 47% smaller,
+saving 1855437 bytes. If you don't count libc, measuring only the
+C++-specific overhead, libstdc++ loads 2178943 while libustl only 323506,
+<em>seven times less</em>! Finally, most of uSTL's size comes from gcc's
 support libraries; if you compile uSTL configured <kbd>--with-libstdc++</kbd>
 option, then you'll see that it only takes up 72322 bytes, of which only
 23350 are used by .text, meaning that only about a third of the library
