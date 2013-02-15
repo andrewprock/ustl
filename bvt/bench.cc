@@ -3,7 +3,7 @@
 // Copyright (c) 2005 by Mike Sharov <msharov@users.sourceforge.net>
 // This file is free software, distributed under the MIT License.
 
-#include <ustl.h>
+#include "../ustl.h"
 #include <time.h>
 using namespace ustl;
 
@@ -115,9 +115,8 @@ void TestCopyFunction (const char* name, CopyFunction pfn)
     const size_t nIter = 128;
     const size_t nBytes = 1024 * 1024 + misalignment;
 
-    string buf1 (nBytes), buf2 (nBytes);
+    string buf1 (nBytes, 0), buf2 (nBytes, 0);
     iota (buf1.begin(), buf1.end(), '\x1');
-    fill (buf2, 0);
     const clock_t first = clock();
     for (uoff_t i = 0; i < nIter; ++ i)
 	(*pfn)(buf1.cdata() + headBytes, nBytes - headBytes - tailBytes, buf2.data() + headBytes + misalignment);
@@ -248,7 +247,7 @@ void TestFillFunction (const char* name, FillFunction pfn)
 {
     const size_t nIter = 256;
     const size_t nBytes = 1024 * 1024;
-    string buf1 (nBytes), buf2 (nBytes);
+    string buf1 (nBytes, 0), buf2 (nBytes, 42);
     iota (buf1.begin(), buf1.end(), '\x1');
     fill (buf2, 42);
     clock_t first = clock();
