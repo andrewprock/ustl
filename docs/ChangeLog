@@ -1,3 +1,20 @@
+2013-02-14 Release 2.0
+	* Some C++11 features implemented. All containers now have move
+	    operations, emplace, and initializer lists. noexcept and
+	    constexpr added where appropriate.
+	* Conform string API to standard
+	    All standard member functions are now present
+	    API change: insert(s,c,n) to insert(s,n,c)
+	* Compilation with clang is now supported. clang 3.2 required.
+	* Change margin allocation strategy to pow2 growth from +64
+	* reserve will now use margin allocation by default, resize is still exact
+	* Detect sys/mman.h and make it optional
+	* Do not close stdin,stdout,stderr on exit
+	* Do not use %m to format errors
+	* Enable copy-on-write in memblock erase
+	* Replace header guards with pragma once
+	* Stop stripping zeroes when assigning specified-length strings
+
 2012-02-18 Release 1.6
 	* Fixed compilation with c++0x
 	    alignof is a keyword in c++0x, so the stream version usually not needed now.
