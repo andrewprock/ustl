@@ -29,7 +29,7 @@ public:
     virtual void	info (string& msgbuf, const char* fmt = NULL) const noexcept;
     virtual void	read (istream& is);
     virtual void	write (ostream& os) const;
-    virtual size_t	stream_size (void) const;
+    virtual size_t	stream_size (void) const noexcept;
 protected:
     string		m_Arg;
 };

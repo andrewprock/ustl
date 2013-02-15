@@ -49,7 +49,7 @@ void error_message::write (ostream& os) const
 }
 
 /// Returns the size of the written object.
-size_t error_message::stream_size (void) const
+size_t error_message::stream_size (void) const noexcept
 {
     return (exception::stream_size() + Align (stream_size_of (m_Arg)));
 }

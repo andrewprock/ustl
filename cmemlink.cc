@@ -40,7 +40,7 @@ void cmemlink::text_write (ostringstream& os) const
 }
 
 /// Returns the number of bytes required to write this object to a stream.
-cmemlink::size_type cmemlink::stream_size (void) const
+cmemlink::size_type cmemlink::stream_size (void) const noexcept
 {
     const written_size_type sz (size());
     return (Align (stream_size_of (sz) + sz, stream_align_of(sz)));
@@ -57,7 +57,7 @@ void cmemlink::write_file (const char* filename, int mode) const
 }
 
 /// Compares to memory block pointed by l. Size is compared first.
-bool cmemlink::operator== (const cmemlink& l) const
+bool cmemlink::operator== (const cmemlink& l) const noexcept
 {
     return (l.m_Size == m_Size &&
 	    (l.m_Data == m_Data || 0 == memcmp (l.m_Data, m_Data, m_Size)));

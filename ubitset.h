@@ -11,8 +11,8 @@ namespace ustl {
 
 typedef uint32_t	bitset_value_type;
 
-void convert_to_bitstring (const bitset_value_type* v, size_t n, string& buf);
-void convert_from_bitstring (const string& buf, bitset_value_type* v, size_t n);
+void convert_to_bitstring (const bitset_value_type* v, size_t n, string& buf) noexcept;
+void convert_from_bitstring (const string& buf, bitset_value_type* v, size_t n) noexcept;
 
 /// \class bitset ubitset.h ustl.h
 /// \ingroup Sequences

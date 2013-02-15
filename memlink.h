@@ -64,7 +64,7 @@ public:
     inline void		relink (const void* p, size_type n)	{ cmemlink::relink (p, n); }
     inline void		relink (void* p, size_type n)		{ cmemlink::relink (p, n); }
     inline void		swap (memlink& l)			{ cmemlink::swap (l); }
-    void		fill (const_iterator start, const void* p, size_type elsize, size_type elCount = 1);
+    void		fill (const_iterator start, const void* p, size_type elsize, size_type elCount = 1) noexcept;
     inline void		insert (const_iterator start, size_type size);
     inline void		erase (const_iterator start, size_type size);
     void		read (istream& is);

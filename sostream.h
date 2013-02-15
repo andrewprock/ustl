@@ -19,7 +19,7 @@ class string;
 class ostringstream : public ostream {
 public:
 				ostringstream (const string& v = "");
-				ostringstream (void* p, size_t n);
+				ostringstream (void* p, size_t n) noexcept;
     void			iwrite (uint8_t v);
     void			iwrite (wchar_t v);
     inline void			iwrite (int v)			{ iformat (v); }
@@ -45,7 +45,7 @@ public:
     inline void			set_decimal_separator (char)	{ }
     inline void			set_thousand_separator (char)	{ }
     inline void			set_precision (uint16_t v)	{ m_Precision = v; }
-    void			link (void* p, size_type n);
+    void			link (void* p, size_type n) noexcept;
     inline void			link (memlink& l)		{ link (l.data(), l.writable_size()); }
     inline const string&	str (void)			{ flush(); return (m_Buffer); }
     void			str (const string& s);
@@ -59,7 +59,7 @@ protected:
     inline size_type		capacity (void) const		{ return (m_Buffer.capacity()); }
 private:
     inline void			write_strz (const char*)	{ assert (!"Writing nul characters into a text stream is not allowed"); }
-    inline char*		encode_dec (char* fmt, uint32_t n) const;
+    inline char*		encode_dec (char* fmt, uint32_t n) const noexcept;
     void			fmtstring (char* fmt, const char* typestr, bool bInteger) const;
     template <typename T>
     void			iformat (T v);

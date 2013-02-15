@@ -12,7 +12,7 @@
 
 namespace ustl {
 
-memblock::memblock (void)			: memlink (), m_Capacity (0) { }
+memblock::memblock (void) noexcept		: memlink (), m_Capacity (0) { }
 memblock::memblock (const void* p, size_type n) : memlink (), m_Capacity (0) { assign (p, n); }
 memblock::memblock (size_type n)		: memlink (), m_Capacity (0) { resize (n); }
 memblock::memblock (const cmemlink& b)		: memlink (), m_Capacity (0) { assign (b); }
@@ -47,7 +47,7 @@ void memblock::deallocate (void) noexcept
 
 /// Assumes control of the memory block \p p of size \p n.
 /// The block assigned using this function will be freed in the destructor.
-void memblock::manage (void* p, size_type n)
+void memblock::manage (void* p, size_type n) noexcept
 {
     assert (p || !n);
     assert (!m_Capacity && "Already managing something. deallocate or unlink first.");

@@ -13,7 +13,7 @@ namespace ustl {
 const char ios_base::c_DefaultDelimiters [istringstream::c_MaxDelimiters] = DEFAULT_DELIMITERS;
 
 /// Default constructor.
-istringstream::istringstream (void)
+istringstream::istringstream (void) noexcept
 : istream (),
   m_Base (0)
 {
@@ -21,7 +21,7 @@ istringstream::istringstream (void)
     set_delimiters (DEFAULT_DELIMITERS);
 }
 
-istringstream::istringstream (const void* p, size_type n)
+istringstream::istringstream (const void* p, size_type n) noexcept
 : istream (),
   m_Base (0)
 {
@@ -30,7 +30,7 @@ istringstream::istringstream (const void* p, size_type n)
     set_delimiters (DEFAULT_DELIMITERS);
 }
 
-istringstream::istringstream (const cmemlink& source)
+istringstream::istringstream (const cmemlink& source) noexcept
 : istream (),
   m_Base (0)
 {
@@ -39,7 +39,7 @@ istringstream::istringstream (const cmemlink& source)
     set_delimiters (DEFAULT_DELIMITERS);
 }
 
-inline bool istringstream::is_delimiter (char c) const
+inline bool istringstream::is_delimiter (char c) const noexcept
 {
     return (memchr (m_Delimiters, c, VectorSize(m_Delimiters)-1));
 }

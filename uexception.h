@@ -65,8 +65,8 @@ public:
     virtual void	info (string& msgbuf, const char* fmt = NULL) const noexcept;
     virtual void	read (istream& is);
     virtual void	write (ostream& os) const;
-    void		text_write (ostringstream& os) const;
-    inline virtual size_t stream_size (void) const { return (sizeof(m_Format) + sizeof(uint32_t) + m_Backtrace.stream_size()); }
+    void		text_write (ostringstream& os) const noexcept;
+    inline virtual size_t stream_size (void) const noexcept { return (sizeof(m_Format) + sizeof(uint32_t) + m_Backtrace.stream_size()); }
     /// Format of the exception is used to lookup exception::info format string.
     /// Another common use is the instantiation of serialized exceptions, used
     /// by the error handler node chain to troubleshoot specific errors.
@@ -117,7 +117,7 @@ public:
     virtual void	info (ustl::string& msgbuf, const char* fmt = NULL) const noexcept;
     virtual void	read (ustl::istream& is);
     virtual void	write (ustl::ostream& os) const;
-    virtual size_t	stream_size (void) const;
+    virtual size_t	stream_size (void) const noexcept;
 protected:
     size_t		m_nBytesRequested;	///< Number of bytes requested by the failed allocation.
 };
@@ -144,7 +144,7 @@ public:
     virtual void	info (string& msgbuf, const char* fmt = NULL) const noexcept;
     virtual void	read (istream& is);
     virtual void	write (ostream& os) const;
-    virtual size_t	stream_size (void) const;
+    virtual size_t	stream_size (void) const noexcept;
 protected:
     intptr_t		m_Errno;		///< Error code returned by the failed operation.
     const char*		m_Operation;		///< Name of the failed operation.
@@ -164,7 +164,7 @@ public:
     virtual void	info (string& msgbuf, const char* fmt = NULL) const noexcept;
     virtual void	read (istream& is);
     virtual void	write (ostream& os) const;
-    virtual size_t	stream_size (void) const;
+    virtual size_t	stream_size (void) const noexcept;
 protected:
     char		m_Filename [PATH_MAX];	///< Name of the file causing the error.
 };
@@ -184,7 +184,7 @@ public:
     virtual void	info (string& msgbuf, const char* fmt = NULL) const noexcept;
     virtual void	read (istream& is);
     virtual void	write (ostream& os) const;
-    virtual size_t	stream_size (void) const;
+    virtual size_t	stream_size (void) const noexcept;
 protected:
     const char*		m_TypeName;
     uoff_t		m_Offset;
@@ -192,6 +192,6 @@ protected:
     size_t		m_Remaining;
 };
 
-const char* demangle_type_name (char* buf, size_t bufSize, size_t* pdmSize = NULL);
+const char* demangle_type_name (char* buf, size_t bufSize, size_t* pdmSize = NULL) noexcept;
 
 } // namespace ustl

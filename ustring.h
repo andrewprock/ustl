@@ -56,11 +56,11 @@ public:
     typedef std::initializer_list<value_type>		initlist_t;
     static const size_type npos = INT_MAX;		///< Value that means the end of string.
 public:
-    inline			string (void)			: memblock () { relink ("",0); }
+    inline			string (void) noexcept		: memblock () { relink ("",0); }
 				string (const string& s);
     inline			string (const string& s, size_type o, size_type n = npos);
     inline explicit		string (const cmemlink& l);
-				string (const_pointer s);
+				string (const_pointer s) noexcept;
     inline			string (const_pointer s, size_type len);
     inline			string (const_pointer s1, const_pointer s2);
 				string (size_type n, value_type c);
@@ -90,7 +90,7 @@ public:
     inline reference		at (size_type pos)		{ assert (pos <= size() && begin()); return (begin()[pos]); }
     inline const_iterator	iat (size_type pos) const	{ return (begin() + (__builtin_constant_p(pos) && pos >= npos ? size() : min(pos,size()))); }
     inline iterator		iat (size_type pos)		{ return (const_cast<iterator>(const_cast<const string*>(this)->iat(pos))); }
-    const_iterator		wiat (size_type i) const;
+    const_iterator		wiat (size_type i) const noexcept;
     inline iterator		wiat (size_type i)		{ return (const_cast<iterator>(const_cast<const string*>(this)->wiat(i))); }
     inline const_reference	front (void) const		{ return (at(0)); }
     inline reference		front (void)			{ return (at(0)); }
@@ -123,7 +123,7 @@ public:
     inline int			compare (const_pointer s) const		{ return (compare (begin(), end(), s, s + strlen(s))); }
     inline int			compare (size_type s1, size_type l1, const_pointer s, size_type l2) const { return (compare (iat(s1), iat(s1+l1), s, s+l2)); }
     inline int			compare (size_type s1, size_type l1, const_pointer s) const { return (compare (s1, l1, s, strlen(s))); }
-    static int			compare (const_iterator first1, const_iterator last1, const_iterator first2, const_iterator last2);
+    static int			compare (const_iterator first1, const_iterator last1, const_iterator first2, const_iterator last2) noexcept;
     inline			operator const value_type* (void) const;
     inline			operator value_type* (void);
     inline const string&	operator= (const string& s)		{ return (assign (s.begin(), s.end())); }
@@ -137,7 +137,7 @@ public:
     inline const string&	operator+= (const_wpointer s)		{ return (append (s)); }
     inline string		operator+ (const string& s) const;
     inline bool			operator== (const string& s) const	{ return (memblock::operator== (s)); }
-    bool			operator== (const_pointer s) const;
+    bool			operator== (const_pointer s) const noexcept;
     inline bool			operator== (value_type c) const		{ return (size() == 1 && c == at(0)); }
     inline bool			operator!= (const string& s) const	{ return (!operator== (s)); }
     inline bool			operator!= (const_pointer s) const	{ return (!operator== (s)); }
@@ -178,30 +178,30 @@ public:
     inline string&		replace (size_type rp, size_type n, size_type count, value_type c)			{ return (replace (iat(rp), iat(rp + n), count, c)); }
     inline string		substr (size_type o = 0, size_type n = npos) const	{ return (string (*this, o, n)); }
     inline void			swap (string& v)					{ memblock::swap (v); }
-    size_type			find (value_type c, uoff_t pos = 0) const;
-    size_type			find (const string& s, uoff_t pos = 0) const;
+    size_type			find (value_type c, uoff_t pos = 0) const noexcept;
+    size_type			find (const string& s, uoff_t pos = 0) const noexcept;
     inline size_type		find (const_pointer p, size_type pos, size_type count) const	{ string sp; sp.link (p,count); return (find (sp, pos)); }
-    size_type			rfind (value_type c, uoff_t pos = npos) const;
-    size_type			rfind (const string& s, uoff_t pos = npos) const;
+    size_type			rfind (value_type c, uoff_t pos = npos) const noexcept;
+    size_type			rfind (const string& s, uoff_t pos = npos) const noexcept;
     inline size_type		rfind (const_pointer p, size_type pos, size_type count) const	{ string sp; sp.link (p,count); return (rfind (sp, pos)); }
-    size_type			find_first_of (const string& s, uoff_t pos = 0) const;
+    size_type			find_first_of (const string& s, uoff_t pos = 0) const noexcept;
     inline size_type		find_first_of (value_type c, uoff_t pos = 0) const				{ string sp (1, c); return (find_first_of(sp,pos)); }
     inline size_type		find_first_of (const_pointer p, size_type pos, size_type count) const		{ string sp; sp.link (p,count); return (find_first_of (sp, pos)); }
-    size_type			find_first_not_of (const string& s, uoff_t pos = 0) const;
+    size_type			find_first_not_of (const string& s, uoff_t pos = 0) const noexcept;
     inline size_type		find_first_not_of (value_type c, uoff_t pos = 0) const				{ string sp (1, c); return (find_first_not_of(sp,pos)); }
     inline size_type		find_first_not_of (const_pointer p, size_type pos, size_type count) const	{ string sp; sp.link (p,count); return (find_first_not_of (sp, pos)); }
-    size_type			find_last_of (const string& s, uoff_t pos = npos) const;
+    size_type			find_last_of (const string& s, uoff_t pos = npos) const noexcept;
     inline size_type		find_last_of (value_type c, uoff_t pos = 0) const				{ string sp (1, c); return (find_last_of(sp,pos)); }
     inline size_type		find_last_of (const_pointer p, size_type pos, size_type count) const		{ string sp; sp.link (p,count); return (find_last_of (sp, pos)); }
-    size_type			find_last_not_of (const string& s, uoff_t pos = npos) const;
+    size_type			find_last_not_of (const string& s, uoff_t pos = npos) const noexcept;
     inline size_type		find_last_not_of (value_type c, uoff_t pos = 0) const				{ string sp (1, c); return (find_last_not_of(sp,pos)); }
     inline size_type		find_last_not_of (const_pointer p, size_type pos, size_type count) const	{ string sp; sp.link (p,count); return (find_last_not_of (sp, pos)); }
     int				vformat (const char* fmt, va_list args);
     int				format (const char* fmt, ...) __attribute__((__format__(__printf__, 2, 3)));
     void			read (istream&);
     void			write (ostream& os) const;
-    size_t			stream_size (void) const;
-    static hashvalue_t		hash (const char* f1, const char* l1);
+    size_t			stream_size (void) const noexcept;
+    static hashvalue_t		hash (const char* f1, const char* l1) noexcept;
 #if HAVE_CPP11
     inline			string (string&& v)		: memblock (forward<string>(v)) {}
     inline			string (initlist_t v)		: memblock() { assign (v.begin(), v.size()); }

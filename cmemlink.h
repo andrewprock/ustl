@@ -58,7 +58,7 @@ public:
     inline void		relink (const void* p, size_type n);
     virtual void	unlink (void) noexcept		{ m_Data = NULL; m_Size = 0; }
     inline rcself_t	operator= (const cmemlink& l)	{ link (l); return (*this); }
-    bool		operator== (const cmemlink& l) const;
+    bool		operator== (const cmemlink& l) const noexcept;
     inline void		swap (cmemlink& l)		{ ::ustl::swap (m_Data, l.m_Data); ::ustl::swap (m_Size, l.m_Size); }
     inline size_type	size (void) const		{ return (m_Size); }
     inline size_type	max_size (void) const		{ return (size()); }
@@ -72,7 +72,7 @@ public:
     inline void		resize (size_type n)		{ m_Size = n; }
     inline void		read (istream&)			{ assert (!"ustl::cmemlink is a read-only object."); }
     void		write (ostream& os) const;
-    size_type		stream_size (void) const;
+    size_type		stream_size (void) const noexcept;
     void		text_write (ostringstream& os) const;
     void		write_file (const char* filename, int mode = 0644) const;
 private:

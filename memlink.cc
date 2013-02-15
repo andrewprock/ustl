@@ -29,7 +29,7 @@ void memlink::read (istream& is)
 /// \arg elCount Number of times to write the pattern.
 /// Total number of bytes written is \p elSize * \p elCount.
 ///
-void memlink::fill (const_iterator cstart, const void* p, size_type elSize, size_type elCount)
+void memlink::fill (const_iterator cstart, const void* p, size_type elSize, size_type elCount) noexcept
 {
     assert (data() || !elCount || !elSize);
     assert (cstart >= begin() && cstart + elSize * elCount <= end());

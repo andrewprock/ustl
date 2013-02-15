@@ -30,7 +30,7 @@ string::string (const string& s)
 }
 
 /// Links to \p s
-string::string (const_pointer s)
+string::string (const_pointer s) noexcept
 : memblock ()
 {
     if (!s) s = "";
@@ -110,7 +110,7 @@ string::size_type string::copy (pointer p, size_type n, size_type start) const n
 /// \li 0 if this string is equal to string \p s
 /// \li -1 if this string is less than string \p s
 ///
-/*static*/ int string::compare (const_iterator first1, const_iterator last1, const_iterator first2, const_iterator last2)
+/*static*/ int string::compare (const_iterator first1, const_iterator last1, const_iterator first2, const_iterator last2) noexcept
 {
     assert (first1 <= last1 && (first2 <= last2 || !last2) && "Negative ranges result in memory allocation errors.");
     const size_type len1 = distance (first1, last1), len2 = distance (first2, last2);
@@ -120,14 +120,14 @@ string::size_type string::copy (pointer p, size_type n, size_type start) const n
 }
 
 /// Returns true if this string is equal to string \p s.
-bool string::operator== (const_pointer s) const
+bool string::operator== (const_pointer s) const noexcept
 {
     if (!s) s = "";
     return (size() == strlen(s) && 0 == memcmp (c_str(), s, size()));
 }
 
 /// Returns the beginning of character \p i.
-string::const_iterator string::wiat (size_type i) const
+string::const_iterator string::wiat (size_type i) const noexcept
 {
     utf8in_iterator<string::const_iterator> cfinder (begin());
     cfinder += i;
@@ -236,14 +236,14 @@ string& string::replace (const_iterator first, const_iterator last, const_pointe
 }
 
 /// Returns the offset of the first occurence of \p c after \p pos.
-string::size_type string::find (value_type c, size_type pos) const
+string::size_type string::find (value_type c, size_type pos) const noexcept
 {
     const_iterator found = ::ustl::find (iat(pos), end(), c);
     return (found < end() ? (size_type) distance(begin(),found) : npos);
 }
 
 /// Returns the offset of the first occurence of substring \p s of length \p n after \p pos.
-string::size_type string::find (const string& s, size_type pos) const
+string::size_type string::find (const string& s, size_type pos) const noexcept
 {
     if (s.empty() || s.size() > size() - pos)
 	return (npos);
@@ -260,7 +260,7 @@ string::size_type string::find (const string& s, size_type pos) const
 }
 
 /// Returns the offset of the last occurence of character \p c before \p pos.
-string::size_type string::rfind (value_type c, size_type pos) const
+string::size_type string::rfind (value_type c, size_type pos) const noexcept
 {
     for (int i = min(pos,size()-1); i >= 0; --i)
 	if (at(i) == c)
@@ -269,7 +269,7 @@ string::size_type string::rfind (value_type c, size_type pos) const
 }
 
 /// Returns the offset of the last occurence of substring \p s of size \p n before \p pos.
-string::size_type string::rfind (const string& s, size_type pos) const
+string::size_type string::rfind (const string& s, size_type pos) const noexcept
 {
     const_iterator d = iat(pos) - 1;
     const_iterator sp = begin() + s.size() - 1;
@@ -282,7 +282,7 @@ string::size_type string::rfind (const string& s, size_type pos) const
 }
 
 /// Returns the offset of the first occurence of one of characters in \p s of size \p n after \p pos.
-string::size_type string::find_first_of (const string& s, size_type pos) const
+string::size_type string::find_first_of (const string& s, size_type pos) const noexcept
 {
     for (size_type i = min(pos,size()); i < size(); ++ i)
 	if (s.find (at(i)) != npos)
@@ -291,7 +291,7 @@ string::size_type string::find_first_of (const string& s, size_type pos) const
 }
 
 /// Returns the offset of the first occurence of one of characters not in \p s of size \p n after \p pos.
-string::size_type string::find_first_not_of (const string& s, size_type pos) const
+string::size_type string::find_first_not_of (const string& s, size_type pos) const noexcept
 {
     for (size_type i = min(pos,size()); i < size(); ++ i)
 	if (s.find (at(i)) == npos)
@@ -300,7 +300,7 @@ string::size_type string::find_first_not_of (const string& s, size_type pos) con
 }
 
 /// Returns the offset of the last occurence of one of characters in \p s of size \p n before \p pos.
-string::size_type string::find_last_of (const string& s, size_type pos) const
+string::size_type string::find_last_of (const string& s, size_type pos) const noexcept
 {
     for (int i = min(pos,size()-1); i >= 0; -- i)
 	if (s.find (at(i)) != npos)
@@ -309,7 +309,7 @@ string::size_type string::find_last_of (const string& s, size_type pos) const
 }
 
 /// Returns the offset of the last occurence of one of characters not in \p s of size \p n before \p pos.
-string::size_type string::find_last_not_of (const string& s, size_type pos) const
+string::size_type string::find_last_not_of (const string& s, size_type pos) const noexcept
 {
     for (int i = min(pos,size()-1); i >= 0; -- i)
 	if (s.find (at(i)) == npos)
@@ -349,7 +349,7 @@ int string::format (const char* fmt, ...)
 }
 
 /// Returns the number of bytes required to write this object to a stream.
-size_t string::stream_size (void) const
+size_t string::stream_size (void) const noexcept
 {
     return (Utf8Bytes(size()) + size());
 }
@@ -385,7 +385,7 @@ void string::write (ostream& os) const
 }
 
 /// Returns a hash value for [first, last)
-/*static*/ hashvalue_t string::hash (const char* first, const char* last)
+/*static*/ hashvalue_t string::hash (const char* first, const char* last) noexcept
 {
     hashvalue_t h = 0;
     // This has the bits flowing into each other from both sides of the number

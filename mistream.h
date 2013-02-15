@@ -65,7 +65,7 @@ public:
     inline		istream (void);
     inline		istream (const void* p, streamsize n);
     inline explicit	istream (const cmemlink& source);
-    explicit		istream (const ostream& source);
+    explicit		istream (const ostream& source) noexcept;
     inline iterator	end (void) const			{ return (cmemlink::end()); }
     inline void		link (const void* p, streamsize n)	{ cmemlink::link (p, n); }
     inline void		link (const cmemlink& l)		{ cmemlink::link (l.cdata(), l.readable_size()); }

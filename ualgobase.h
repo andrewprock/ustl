@@ -157,9 +157,9 @@ inline size_t popcount (uint32_t v)	{ return (__builtin_popcount (v)); }
 inline size_t popcount (uint64_t v)	{ return (__builtin_popcountll (v)); }
 #endif
 #else
-size_t popcount (uint32_t v);
+size_t popcount (uint32_t v) noexcept;
 #if HAVE_INT64_T
-size_t popcount (uint64_t v);
+size_t popcount (uint64_t v) noexcept;
 #endif	// HAVE_INT64_T
 #endif	// __GNUC__
 

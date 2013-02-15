@@ -22,13 +22,13 @@ void ios_base::overrun (const char* op, const char* type, uint32_t n, uint32_t p
 //--------------------------------------------------------------------
 
 /// Attaches to the block pointed to by source of size source.pos()
-istream::istream (const ostream& source)
+istream::istream (const ostream& source) noexcept
 : cmemlink (source.begin(), source.pos()),
   m_Pos (0)
 {
 }
 
-void istream::unlink (void) noexcept			{ cmemlink::unlink(); m_Pos = 0; }
+void istream::unlink (void) noexcept		{ cmemlink::unlink(); m_Pos = 0; }
 void ostream::unlink (void) noexcept		{ memlink::unlink(); m_Pos = 0; }
 
 /// Writes all unread bytes into \p os.

@@ -21,9 +21,9 @@ class istringstream : public istream {
 public:
     static const size_type	c_MaxDelimiters = 16;	///< Maximum number of word delimiters.
 public:
-    				istringstream (void);
-				istringstream (const void* p, size_type n);
-    explicit			istringstream (const cmemlink& source);
+				istringstream (void) noexcept;
+				istringstream (const void* p, size_type n) noexcept;
+    explicit			istringstream (const cmemlink& source) noexcept;
     void			iread (int8_t& v)	{ v = skip_delimiters(); }
     void			iread (int32_t& v);
     void			iread (double& v);
@@ -60,7 +60,7 @@ protected:
     char			skip_delimiters (void);
 private:
     inline void			read_strz (string&)	{ assert (!"Reading nul characters is not allowed from text streams"); }
-    inline bool			is_delimiter (char c) const;
+    inline bool			is_delimiter (char c) const noexcept;
     template <typename T> void	read_number (T& v);
 private:
     char			m_Delimiters [c_MaxDelimiters];

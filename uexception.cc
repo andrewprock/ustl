@@ -51,7 +51,7 @@ void exception::write (ostream& os) const
 }
 
 /// Writes the exception as text into stream \p os.
-void exception::text_write (ostringstream& os) const
+void exception::text_write (ostringstream& os) const noexcept
 {
     try {
 	string buf;
@@ -96,7 +96,7 @@ void bad_alloc::write (ustl::ostream& os) const
 }
 
 /// Returns the size of the written exception.
-size_t bad_alloc::stream_size (void) const
+size_t bad_alloc::stream_size (void) const noexcept
 {
     return (ustl::exception::stream_size() + ustl::stream_size_of(m_nBytesRequested));
 }
@@ -154,7 +154,7 @@ void libc_exception::write (ostream& os) const
 }
 
 /// Returns the size of the written exception.
-size_t libc_exception::stream_size (void) const
+size_t libc_exception::stream_size (void) const noexcept
 {
     return (exception::stream_size() +
 	    stream_size_of(m_Errno) +
@@ -202,7 +202,7 @@ void file_exception::write (ostream& os) const
 }
 
 /// Returns the size of the written exception.
-size_t file_exception::stream_size (void) const
+size_t file_exception::stream_size (void) const noexcept
 {
     return (libc_exception::stream_size() +
 	    Align (stream_size_of (string (m_Filename)), 8));
@@ -215,7 +215,7 @@ size_t file_exception::stream_size (void) const
 /// The result is written to \p buf, with the maximum size of \p bufSize, and
 /// is zero-terminated. The return value is \p buf.
 ///
-const char* demangle_type_name (char* buf, size_t bufSize, size_t* pdmSize)
+const char* demangle_type_name (char* buf, size_t bufSize, size_t* pdmSize) noexcept
 {
     size_t bl = strlen (buf);
 #if HAVE_CXXABI_H && WANT_NAME_DEMANGLING
@@ -274,7 +274,7 @@ void stream_bounds_exception::write (ostream& os) const
 }
 
 /// Returns the size of the written exception.
-size_t stream_bounds_exception::stream_size (void) const
+size_t stream_bounds_exception::stream_size (void) const noexcept
 {
     return (libc_exception::stream_size() +
 	    stream_size_of(m_TypeName) +

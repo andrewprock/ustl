@@ -12,7 +12,7 @@
 namespace ustl {
 
 /// Creates an output string stream linked to the given memory area.
-ostringstream::ostringstream (void* p, size_t n)
+ostringstream::ostringstream (void* p, size_t n) noexcept
 : ostream (),
   m_Buffer (),
   m_Flags (0),
@@ -62,7 +62,7 @@ ostringstream& ostringstream::write (const void* buffer, size_type sz)
 }
 
 /// Simple decimal encoding of \p n into \p fmt.
-inline char* ostringstream::encode_dec (char* fmt, uint32_t n) const
+inline char* ostringstream::encode_dec (char* fmt, uint32_t n) const noexcept
 {
     do {
 	*fmt++ = '0' + n % 10;
@@ -144,7 +144,7 @@ int ostringstream::format (const char* fmt, ...)
 }
 
 /// Links to string \p l as resizable.
-void ostringstream::link (void* p, size_type n)
+void ostringstream::link (void* p, size_type n) noexcept
 {
     assert ((p || !n) && "The output string buffer must not be read-only");
     ostream::link (p, n);

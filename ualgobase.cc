@@ -254,7 +254,7 @@ void rotate_fast (void* first, void* middle, void* last) noexcept
 }
 
 #if __GNUC__ < 4
-size_t popcount (uint32_t v)
+size_t popcount (uint32_t v) noexcept
 {
     const uint32_t w = v - ((v >> 1) & 0x55555555); // Algorithm from AMD optimization guide
     const uint32_t x = (w & 0x33333333) + ((w >> 2) & 0x33333333);
@@ -263,7 +263,7 @@ size_t popcount (uint32_t v)
 
 #if HAVE_INT64_T
 /// \brief Returns the number of 1s in \p v in binary.
-size_t popcount (uint64_t v)
+size_t popcount (uint64_t v) noexcept
 {
     v -= (v >> 1) & UINT64_C(0x5555555555555555);		// Algorithm from Wikipedia
     v = (v & UINT64_C(0x3333333333333333)) + ((v >> 2) & UINT64_C(0x3333333333333333));

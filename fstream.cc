@@ -18,7 +18,7 @@
 namespace ustl {
 
 /// Default constructor.
-fstream::fstream (void)
+fstream::fstream (void) noexcept
 : ios_base (),
   m_fd (-1),
   m_Filename ()
@@ -75,14 +75,14 @@ void fstream::attach (int nfd, const char* filename)
 }
 
 /// Detaches from the current fd.
-void fstream::detach (void)
+void fstream::detach (void) noexcept
 {
     m_fd = -1;
     m_Filename.clear();
 }
 
 /// Converts openmode bits into libc open flags.
-/*static*/ int fstream::om_to_flags (openmode m)
+/*static*/ int fstream::om_to_flags (openmode m) noexcept
 {
     static const int s_OMFlags [nombits] = {
 	0,		// in
@@ -135,7 +135,7 @@ off_t fstream::seek (off_t n, seekdir whence)
 }
 
 /// Returns the current file position.
-off_t fstream::pos (void) const
+off_t fstream::pos (void) const noexcept
 {
     return (lseek (m_fd, 0, SEEK_CUR));
 }
@@ -226,7 +226,7 @@ int fstream::fcntl (const char* rname, int request, long argument)
     return (rv);
 }
 
-void fstream::set_nonblock (bool v)
+void fstream::set_nonblock (bool v) noexcept
 {
     int curf = max (0, fcntl (FCNTLID (F_GETFL)));
     if (v) curf |=  O_NONBLOCK;
