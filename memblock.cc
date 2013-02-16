@@ -106,9 +106,10 @@ void memblock::shrink_to_fit (void)
     if (is_linked())
 	return;
     pointer newBlock = (pointer) realloc (begin(), size());
-    if (!newBlock)
+    if (!newBlock && size())
 	throw bad_alloc (size());
     m_Capacity = size();
+    memlink::relink (newBlock, size());
 }
 
 /// Shifts the data in the linked block from \p start to \p start + \p n.
