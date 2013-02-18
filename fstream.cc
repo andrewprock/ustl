@@ -99,9 +99,9 @@ void fstream::detach (void) noexcept
     if (O_RDONLY == in-1 && O_WRONLY == out-1 && O_RDWR == (in|out)-1)
 	flags = (m - 1) & O_ACCMODE;
     else
-	flags = (m & (in|out)) ? O_RDWR : ((m & out) ? O_WRONLY : O_RDONLY);
+	flags = ((m&(in|out))==(in|out)) ? O_RDWR : ((m&out) ? O_WRONLY : O_RDONLY);
     for (uoff_t i = 0; i < VectorSize(s_OMFlags); ++ i)
-	flags |= s_OMFlags[i] & (!(m & (1 << i)) - 1);
+	flags |= s_OMFlags[i] & (!(m&(1<<i))-1);
     if (m & nocreate)
 	flags &= ~O_CREAT;
     return (flags);
