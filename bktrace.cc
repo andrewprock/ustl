@@ -6,7 +6,7 @@
 #include "bktrace.h"
 #include "sostream.h"
 #include "mistream.h"
-#if linux && __GNUC__
+#if HAVE_EXECINFO_H
     #include <execinfo.h>
 #else
     static inline int backtrace (void**, int)			{ return (0); }

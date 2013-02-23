@@ -167,6 +167,9 @@
 // Define to 1 if you have the <math.h> header file.
 #undef HAVE_MATH_H
 
+// Define to 1 if you have the <execinfo.h> header file.
+#undef HAVE_EXECINFO_H
+
 // Define to 1 if you have the <cxxabi.h> header file.
 #if __GNUC__ >= 3
     #define HAVE_CXXABI_H 1
