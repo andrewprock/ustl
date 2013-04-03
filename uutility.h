@@ -25,7 +25,6 @@ namespace ustl {
 
 /// Returns the end() for a static vector
 template <typename T, size_t N> inline constexpr T* VectorEnd (T(&a)[N]) { return (&a[N]); }
-template <typename T> inline constexpr T* VectorEnd (T(&a)[0]) { return (a); }
 
 /// Expands into a ptr,size expression for the given static vector; useful as link arguments.
 #define VectorBlock(v)	&(v)[0], VectorSize(v)
