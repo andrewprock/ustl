@@ -121,14 +121,13 @@ int ostringstream::vformat (const char* fmt, va_list args)
     #undef __va_copy
     #define __va_copy(x,y)
 #endif
-    size_t rv, space;
+    int rv, space;
     do {
 	space = remaining();
 	__va_copy (args2, args);
-	rv = vsnprintf (ipos(), space, fmt, args2);
-	if (ssize_t(rv) < 0)
-	    rv = space;
-    } while (rv >= space && rv < overflow(rv + 1));
+	if (0 > (rv = vsnprintf (ipos(), space, fmt, args2)))
+	    return (rv);
+    } while (rv >= space && rv < (int)overflow(rv+1));
     SetPos (pos() + min (rv, space));
     return (rv);
 }
