@@ -207,7 +207,7 @@ ForwardIterator lower_bound (ForwardIterator first, ForwardIterator last, const 
 {
     ForwardIterator mid;
     while (first != last) {
-	mid = advance (first, distance (first,last) / 2);
+	mid = advance (first, size_t(distance (first,last)) / 2);
 	if (comp (*mid, value))
 	    first = mid + 1;
 	else
@@ -237,7 +237,7 @@ ForwardIterator upper_bound (ForwardIterator first, ForwardIterator last, const 
 {
     ForwardIterator mid;
     while (first != last) {
-	mid = advance (first, distance (first,last) / 2);
+	mid = advance (first, size_t(distance (first,last)) / 2);
 	if (comp (value, *mid))
 	    last = mid;
 	else
