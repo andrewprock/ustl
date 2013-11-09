@@ -106,28 +106,33 @@ template <typename T>
 inline constexpr T& NullValue (void)
     { return (*NullPointer<T>()); }
 
-/// Offsets an iterator
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+// Offsets a pointer
 template <typename T>
-inline T advance (T i, ssize_t offset)
+inline T advance_ptr (T i, ptrdiff_t offset)
     { return (i + offset); }
 
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-/// Offsets a void pointer
+// Offsets a void pointer
 template <>
-inline const void* advance (const void* p, ssize_t offset)
+inline const void* advance_ptr (const void* p, ptrdiff_t offset)
 {
     assert (p || !offset);
     return (reinterpret_cast<const uint8_t*>(p) + offset);
 }
 
-/// Offsets a void pointer
+// Offsets a void pointer
 template <>
-inline void* advance (void* p, ssize_t offset)
+inline void* advance_ptr (void* p, ptrdiff_t offset)
 {
     assert (p || !offset);
     return (reinterpret_cast<uint8_t*>(p) + offset);
 }
 #endif
+
+/// Offsets an iterator
+template <typename T, typename Distance>
+inline T advance (T i, Distance offset)
+    { return (advance_ptr (i, offset)); }
 
 /// Returns the difference \p p1 - \p p2
 template <typename T1, typename T2>
