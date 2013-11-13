@@ -10,7 +10,7 @@
     <meta name="Description" content="API and usage description for uSTL, a size-optimized STL implementation" />
     <meta name="Keywords" content="C++, STL, template, bloat, optimization" />
     <meta name="author" content="Mike Sharov" />
-    <meta name="date" content="2011-03-16" />
+    <meta name="date" content="2013-11-14" />
 </head>
 <body>
 
@@ -65,10 +65,10 @@ under gcc 2.95, some features require at least gcc 3.4 and are simply
 turned off with an older version. The minimum requirement to enable
 C++11 features is gcc 4.6 or clang 3.2.
 </p><p>
-The latest version of uSTL can always be downloaded from its SourceForge
-<a href="https://sourceforge.net/projects/ustl/files/">project files page</a>.
+The latest version of uSTL can always be downloaded from its GitHub
+<a href="https://github.com/msharov/ustl/releases/latest">release page</a>.
 If you like living dangerously, you can pull the working branch directly from
-<a href="https://sourceforge.net/p/ustl/code/?branch=ref%2Fmaster">git://git.code.sf.net/p/ustl/code</a>.
+<a href="https://github.com/msharov/ustl">git@github.com:msharov/ustl.git</a>.
 The mainline source should build on any unix-based system, including
 Linux, BSD, MacOS, SunOS, and Solaris. Windows-based systems and embedded
 platforms, are not, and will not be supported by the mainline. However,
@@ -301,15 +301,15 @@ write a little functor for all your iterative tasks:
 class CCompareAndReplace {
 public:
     CCompareAndReplace (int minValue, int maxValue, int badValue)
-	: m_MinValue (minValue), m_MaxValue (maxValue), m_BadValue (badValue) {}
+	: _minValue (minValue), _maxValue (maxValue), _badValue (badValue) {}
     void operator (int&amp; v) {
-	if (v &lt; m_MinValue || v &gt; m_MaxValue)
-	    v = m_BadValue;
+	if (v &lt; _minValue || v &gt; _maxValue)
+	    v = _badValue;
     }
 private:
-    int m_MinValue;
-    int m_MaxValue;
-    int m_BadValue;
+    int _minValue;
+    int _maxValue;
+    int _badValue;
 };
 
 for_each (v.begin(), v.end(), CCompareAndReplace (5, 10, 99));
@@ -717,20 +717,8 @@ examples are compiled with this option.
 </p>
 <h2><a name="Contact">Bug reporting</a></h2>
 <p>
-Report bugs through the SourceForge.net
-<a href="http://sourceforge.net/projects/ustl">uSTL project page</a> with the
-standard bugtracker.
+Report bugs through the
+<a href="https://github.com/msharov/ustl/issues">project issue tracker</a>.
 </p>
-<hr />
-<div class="sffooter">
-    <a href="http://validator.w3.org/check?uri=referer">
-	<img src="style/valid-xhtml10.png"
-	    height="31" width="88" alt="Valid XHTML 1.0!" />
-    </a>
-    <a href="http://sourceforge.net">
-	<img src="http://sourceforge.net/sflogo.php?group_id=76798&amp;type=4"
-	    width="127" height="37" alt="Hosted on SourceForge.net" />
-    </a> 
-</div>
 </body>
 </html>
