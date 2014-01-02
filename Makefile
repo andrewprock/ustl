@@ -5,10 +5,11 @@
 SRCS	:= $(wildcard *.cc)
 INCS	:= $(wildcard *.h)
 OBJS	:= $(addprefix $O,$(SRCS:.cc=.o))
+DEPS	:= ${OBJS:.o=.d}
 
 ################ Compilation ###########################################
 
-.PHONY: all clean html check dist distclean maintainer-clean
+.PHONY: all clean html check distclean maintainer-clean
 
 all:	Config.mk config.h ${NAME}/config.h
 ALLTGTS	:= Config.mk config.h ${NAME}/config.h
@@ -75,8 +76,11 @@ ${RINCI}: ${NAME}.h
 	@${INSTALLDATA} $< $@
 uninstall:	uninstall-incs
 uninstall-incs:
-	@echo "Removing ${LIDIR}/ and ${LIDIR}.h ..."
-	@(cd ${INCDIR}; rm -f ${INCSI} ${NAME}.h; [ ! -d ${NAME} ] || rm -rf ${NAME})
+	@if [ -d ${LIDIR} -o -f ${LIDIR}.h ]; then\
+	    echo "Removing ${LIDIR}/ and ${LIDIR}.h ...";\
+	    rm -f ${INCSI} ${RINCI};\
+	    rmdir ${LIDIR};\
+	fi
 endif
 
 ####### Install libraries (shared and/or static)
@@ -108,29 +112,13 @@ endif
 ################ Maintenance ###########################################
 
 clean:
-	@[ ! -d ./$O ] || rm -rf ./$O
+	@if [ -d $O ]; then\
+	    rm -f ${SLIBT} ${SLINKS} ${OBJS} ${DEPS};\
+	    rmdir $O;\
+	fi
 
 html:	${SRCS} ${INCS} ${NAME}doc.in
 	@${DOXYGEN} ${NAME}doc.in
-
-ifdef MAJOR
-DISTVER	:= ${MAJOR}.${MINOR}
-DISTNAM	:= ${NAME}-${DISTVER}
-DISTLSM	:= ${DISTNAM}.lsm
-DISTTAR	:= ${DISTNAM}.tar.bz2
-
-dist:
-	@echo "Generating ${DISTTAR} and ${DISTLSM} ..."
-	@mkdir .${DISTNAM}
-	@rm -f ${DISTTAR}
-	@cp -r * .${DISTNAM} && mv .${DISTNAM} ${DISTNAM}
-	@+${MAKE} -sC ${DISTNAM} maintainer-clean
-	@tar jcf ${DISTTAR} ${DISTNAM} && rm -rf ${DISTNAM}
-	@echo "s/@version@/${DISTVER}/" > ${DISTLSM}.sed
-	@echo "s/@date@/`date +%F`/" >> ${DISTLSM}.sed
-	@echo -n "s/@disttar@/`du -h --apparent-size ${DISTTAR}`/" >> ${DISTLSM}.sed;
-	@sed -f ${DISTLSM}.sed docs/${NAME}.lsm > ${DISTLSM} && rm -f ${DISTLSM}.sed
-endif
 
 distclean:	clean
 	@rm -f Config.mk config.h config.status ${NAME}

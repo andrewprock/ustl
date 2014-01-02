@@ -14,6 +14,7 @@ endif
 ifdef NOLIBSTDCPP
 bvt/LIBS	+= ${STAL_LIBS} -lm
 endif
+bvt/DEPS	:= ${bvt/OBJS:.o=.d} $Obvt/stdtest.d $Obvt/bench.d
 
 ################ Compilation ###########################################
 
@@ -44,12 +45,13 @@ bvt/bench:	$Obvt/bench.o $Obvt/stdtest.o ${ALLTGTS}
 
 clean:	bvt/clean
 bvt/clean:
-	@rm -f ${bvt/BVTS} ${bvt/OBJS} $(bvt/OBJS:.o=.d) bvt/bench $Obvt/bench.o $Obvt/stdtest.o $Obvt/bench.d $Obvt/stdtest.d
-	@rmdir $O/bvt &> /dev/null || true
-
+	@if [ -d $Obvt ]; then\
+	    rm -f ${bvt/BVTS} ${bvt/OBJS} ${bvt/DEPS} bvt/bench $Obvt/bench.o $Obvt/stdtest.o;\
+	    rmdir $Obvt;\
+	fi
 check:		bvt/run
 bvt/check:	check
 
 ${bvt/OBJS} $Obvt/stdtest.o $Obvt/bench.o: Makefile bvt/Module.mk Config.mk ${NAME}/config.h
 
--include ${bvt/OBJS:.o=.d} $Obvt/stdtest.d
+-include ${bvt/DEPS}
