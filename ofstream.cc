@@ -67,7 +67,6 @@ ofstream& ofstream::flush (void)
 {
     clear();
     while (good() && pos() && overflow (remaining())) ;
-    m_File.sync();
     clear (m_File.rdstate());
     return (*this);
 }
@@ -151,7 +150,6 @@ int ifstream::sync (void)
 {
     istringstream::sync();
     underflow (0U);
-    m_File.sync();
     clear (m_File.rdstate());
     return (-good());
 }
